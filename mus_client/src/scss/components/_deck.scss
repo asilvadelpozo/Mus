@@ -1,0 +1,43 @@
+.card {
+  width: 157px;
+  height: 240px;
+  display: inline-block;
+  max-width: 100%;
+  background-size: 100%;
+
+  $percentage: 1/9;
+
+  //oros
+  @for $i from 1 through 10 {
+    &--o#{$i} {
+      background: url('../img/oros.png') 0 percentage(($i - 1) * $percentage);
+    }
+  }
+
+  //copas
+  @for $i from 1 through 10 {
+    &--c#{$i} {
+      background: url('../img/copas.png') 0 percentage(($i - 1) * $percentage);
+    }
+  }
+
+  //espadas
+  @for $i from 1 through 10 {
+    &--e#{$i} {
+      background: url('../img/espadas.png') 0 percentage(($i - 1) * $percentage);
+    }
+  }
+
+  //bastos
+  @for $i from 1 through 10 {
+    &--b#{$i} {
+      background: url('../img/bastos.png') 0 percentage(($i - 1) * $percentage);
+    }
+  }
+
+  //reverse
+  &--reverse {
+    background: url('../img/reverse.png') 0 0%;
+  }
+
+}

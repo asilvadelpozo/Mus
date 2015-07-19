@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="musApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Mus</title>
+    <link rel="stylesheet" href="dist/css/main.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header__title">Mus</div>
+    </header>
+
+    <div class="container" data-ng-view></div>
+
+    <footer>
+        &copy; 2015, Mus. All rights reserved.
+    </footer>
+
+<script src="bower_components/socket.io-client/socket.io.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+
+<script src="dist/js/main.js"></script>
+
+</body>
+</html>

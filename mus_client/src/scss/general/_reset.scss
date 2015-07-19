@@ -1,0 +1,17 @@
+$root-font-size: 1rem;
+
+body {
+  font-size: $root-font-size;
+  font-family: Verdana, sans-serif;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}

@@ -1,0 +1,13 @@
+.container {
+  font-size: $root-font-size;
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 1em;
+  &:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}

@@ -1,0 +1,32 @@
+<!--<div>-->
+<!--<section class="rooms">-->
+<!--List of rooms-->
+<!--</section>-->
+
+<!--<aside class="players">-->
+<!--</aside>-->
+<!--</div>-->
+
+
+<input data-ng-model="playerName"/>
+<br>
+<button type="button" data-ng-click="createRoom()">New Room</button>
+<br>
+
+Player Name: {{playerName}}
+<br>
+
+Players:
+<ul>
+    <li data-ng-repeat="player in musModel.players">{{player}}</li>
+</ul>
+
+<br>
+Tables
+
+<div data-ng-repeat="roomId in [] | getKeys: musModel.roomsModel.rooms">
+    <div>{{roomId}}</div>
+    <button type="button" data-ng-click="joinRoom(roomId)">Join</button>
+</div>
+
+

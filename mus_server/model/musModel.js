@@ -17,8 +17,9 @@
     };
 
     MusModel.prototype.createRoom = function(creatorId, creatorName) {
-        this.players[creatorId] = creatorName;
-        return this.roomsModel.createRoom(creatorName);
+        var roomId = this.roomsModel.createRoom(creatorName);
+        this.players[creatorId] = {'playerName': creatorName, 'roomId': roomId};
+        return roomId;
     };
 
     MusModel.prototype.deleteRoom = function(id) {
@@ -27,7 +28,7 @@
 
     MusModel.prototype.addPlayerToRoom = function(playerId, playerName, roomId) {
         if (this.roomsModel.addPlayerToRoom(playerName, roomId)) {
-            this.players[playerId] = playerName;
+            this.players[playerId] = {'playerName': playerName, 'roomId': roomId};
             return true;
         }
         return false;
@@ -35,7 +36,7 @@
 
     MusModel.prototype.deletePlayerFromRoom = function(playerId, roomId) {
 
-        this.roomsModel.deletePlayerFromRoom(this.players[playerId], roomId);
+        this.roomsModel.deletePlayerFromRoom(this.players[playerId].playerName, roomId);
 
         if(this.roomsModel.getRoomById(roomId).isEmpty()) {
             this.roomsModel.deleteRoom(roomId);
@@ -43,6 +44,10 @@
 
         console.log('deleting player  ' + this.players[playerId]);
         delete this.players[playerId];
+    };
+
+    MusModel.prototype.isUserPlaying = function(clientId) {
+        return this.players.hasOwnProperty(clientId);
     };
 
     MusModel.prototype.toJSON = function() {

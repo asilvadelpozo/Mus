@@ -32,14 +32,14 @@
             });
 
             client.on('room-info', function(roomId) {
-                console.log('initializing room: ' + JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id]}));
-                client.emit('room-info-init', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id]}));
+                console.log('initializing room: ' + JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
+                client.emit('room-info-init', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
             });
 
             client.on('leave-room', function(data) {
                 console.log('leave-room: on socket');
                 console.log('data: ' + data);
-                var playerName = musModel.getPlayers()[client.id],
+                var playerName = musModel.getPlayers()[client.id].playerName,
                     roomId = data;
 
                 console.log('playerName: ' + playerName);
@@ -62,6 +62,15 @@
 
             client.on("disconnect", function() {
                 console.log('user ' + client.id + ' disconnected');
+                if(musModel.isUserPlaying(client.id)) {
+                    var roomId = musModel.getPlayers()[client.id].roomId,
+                        playerName = musModel.getPlayers()[client.id].playerName;
+                    musModel.deletePlayerFromRoom(client.id, roomId);
+                    client.leave(roomId);
+                    client.broadcast.to(roomId).emit('player-left', playerName + ' left the room');
+                    client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
+                    server.sockets.emit('update-mus', JSON.stringify(musModel));
+                }
             });
 
         });

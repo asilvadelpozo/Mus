@@ -13,13 +13,6 @@
                 $log.log($scope.musModel);
             };
 
-            $scope.$on('socket:mus-info-success', function(event, data) {
-                $log.log('Main Event: ', event.name);
-                $scope.$apply(function() {
-                    $scope.updateModel(JSON.parse(data));
-                });
-            });
-
             $scope.createRoom = function() {
                 $log.log('Main Player Name: ', $scope.playerName);
                 musSocketService.emit('create-room', $scope.playerName);

@@ -20,7 +20,7 @@
                     client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
                     server.sockets.emit('update-mus', JSON.stringify(musModel));
                 }
-                client.emit('mus-info-success', JSON.stringify(musModel));
+                client.emit('update-mus', JSON.stringify(musModel));
             });
 
 

@@ -8,18 +8,6 @@
 
             musSocketService.emit('room-info', $routeParams.roomId);
 
-            $scope.updateRoom = function(room) {
-                $scope.room = room;
-                $log.log($scope.room);
-            };
-
-            $scope.$on('socket:update-room', function(event, data) {
-                $log.log('Room Event: ', event.name);
-                $scope.$apply(function() {
-                    $scope.updateRoom(JSON.parse(data));
-                });
-            });
-
             $scope.$on('socket:room-info-success', function(event, data) {
                 $log.log('Room Event: ', event.name);
                 $log.log(JSON.parse(data));
@@ -35,6 +23,18 @@
                 $log.log('Room Event: ', event.name);
                 $log.log(data);
                 $location.url('/');
+            });
+
+            $scope.updateRoom = function(room) {
+                $scope.room = room;
+                $log.log($scope.room);
+            };
+
+            $scope.$on('socket:update-room', function(event, data) {
+                $log.log('Room Event: ', event.name);
+                $scope.$apply(function() {
+                    $scope.updateRoom(JSON.parse(data));
+                });
             });
 
             $scope.leaveRoom = function() {

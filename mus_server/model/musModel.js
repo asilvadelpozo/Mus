@@ -42,7 +42,6 @@
             this.roomsModel.deleteRoom(roomId);
         }
 
-        console.log('deleting player  ' + this.players[playerId]);
         delete this.players[playerId];
     };
 

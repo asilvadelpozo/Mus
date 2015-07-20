@@ -30,14 +30,6 @@
     };
 
     RoomsModel.prototype.deletePlayerFromRoom = function(playerName, roomId) {
-        console.log('Deleting...');
-        console.log('playerName: ' + playerName);
-        console.log('roomId: ' + roomId);
-
-        console.log('room info before deletion: ');
-        console.log('roomId: ' + this.getRoomById(roomId).getId());
-        console.log('players: ' + this.getRoomById(roomId).getPlayers());
-
         this.getRoomById(roomId).deletePlayer(playerName);
     };
 

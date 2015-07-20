@@ -6,12 +6,14 @@
             $scope.musModel = {};
             $scope.playerName = '';
 
+            musSocketService.emit('mus-info');
+
             $scope.updateModel = function(model) {
                 $scope.musModel = model;
                 $log.log($scope.musModel);
             };
 
-            $scope.$on('socket:connection-success', function(event, data) {
+            $scope.$on('socket:mus-info-success', function(event, data) {
                 $log.log('Main Event: ', event.name);
                 $scope.$apply(function() {
                     $scope.updateModel(JSON.parse(data));

@@ -13,12 +13,14 @@
             $scope.musModel = {};
             $scope.playerName = '';
 
+            musSocketService.emit('mus-info');
+
             $scope.updateModel = function(model) {
                 $scope.musModel = model;
                 $log.log($scope.musModel);
             };
 
-            $scope.$on('socket:connection-success', function(event, data) {
+            $scope.$on('socket:mus-info-success', function(event, data) {
                 $log.log('Main Event: ', event.name);
                 $scope.$apply(function() {
                     $scope.updateModel(JSON.parse(data));
@@ -83,7 +85,7 @@
                 });
             });
 
-            $scope.$on('socket:room-info-init', function(event, data) {
+            $scope.$on('socket:room-info-success', function(event, data) {
                 $log.log('Room Event: ', event.name);
                 $log.log(JSON.parse(data));
                 $scope.$apply(function() {
@@ -94,6 +96,12 @@
                 });
             });
 
+            $scope.$on('socket:room-info-failure', function(event, data) {
+                $log.log('Room Event: ', event.name);
+                $log.log(data);
+                $location.url('/');
+            });
+
             $scope.leaveRoom = function() {
                 $log.log('leaving...: ' + JSON.stringify({playerName: $scope.playerName, roomId: $scope.room.id}));
                 musSocketService.emit('leave-room', $scope.room.id);
@@ -101,7 +109,7 @@
 
             $scope.$on('socket:leave-room-success', function(event) {
                 $log.log('Room Event: ', event.name);
-                $location.url( '/');
+                $location.url('/');
             });
 
             $scope.$on('socket:player-left', function(event, data) {
@@ -159,11 +167,12 @@
     angular.module('musApp')
         .factory('musSocketService', function (socketFactory) {
             var socket = socketFactory();
-            socket.forward('connection-success');
+            socket.forward('mus-info-success');
 
             socket.forward('room-creation-success');
 
-            socket.forward('room-info-init');
+            socket.forward('room-info-success');
+            socket.forward('room-info-failure');
 
             socket.forward('room-join-success');
             socket.forward('room-join-failure');

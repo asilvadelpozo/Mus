@@ -4,11 +4,12 @@
     angular.module('musApp')
         .factory('musSocketService', function (socketFactory) {
             var socket = socketFactory();
-            socket.forward('connection-success');
+            socket.forward('mus-info-success');
 
             socket.forward('room-creation-success');
 
-            socket.forward('room-info-init');
+            socket.forward('room-info-success');
+            socket.forward('room-info-failure');
 
             socket.forward('room-join-success');
             socket.forward('room-join-failure');

@@ -50,6 +50,10 @@
         return this.players.hasOwnProperty(clientId);
     };
 
+    MusModel.prototype.isUserPlayingInRoom = function(clientId, roomId) {
+        return this.players.hasOwnProperty(clientId) && this.players[clientId].roomId == roomId;
+    };
+
     MusModel.prototype.toJSON = function() {
         var data = {};
         data.roomsModel = this.roomsModel;

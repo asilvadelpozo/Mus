@@ -9,7 +9,20 @@
 
         server.on('connection', function (client) {
             console.log('user ' + client.id + ' connected');
-            client.emit('connection-success', JSON.stringify(musModel));
+
+            client.on('mus-info', function() {
+                if(musModel.isUserPlaying(client.id)) {
+                    var roomId = musModel.getPlayers()[client.id].roomId,
+                        playerName = musModel.getPlayers()[client.id].playerName;
+                    musModel.deletePlayerFromRoom(client.id, roomId);
+                    client.leave(roomId);
+                    client.broadcast.to(roomId).emit('player-left', playerName + ' left the room');
+                    client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
+                    server.sockets.emit('update-mus', JSON.stringify(musModel));
+                }
+                client.emit('mus-info-success', JSON.stringify(musModel));
+            });
+
 
             client.on('create-room', function(playerName) {
                 var roomId = musModel.createRoom(client.id, playerName);
@@ -32,8 +45,13 @@
             });
 
             client.on('room-info', function(roomId) {
-                console.log('initializing room: ' + JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
-                client.emit('room-info-init', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
+                if(musModel.isUserPlayingInRoom(client.id, roomId)) {
+                    console.log('initializing room: ' + JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
+                    client.emit('room-info-success', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
+                } else {
+                    client.emit('room-info-failure', 'You are attempting to enter a room in an invalid way');
+                }
+
             });
 
             client.on('leave-room', function(data) {

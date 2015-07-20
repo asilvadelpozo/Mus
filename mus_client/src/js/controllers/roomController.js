@@ -20,7 +20,7 @@
                 });
             });
 
-            $scope.$on('socket:room-info-init', function(event, data) {
+            $scope.$on('socket:room-info-success', function(event, data) {
                 $log.log('Room Event: ', event.name);
                 $log.log(JSON.parse(data));
                 $scope.$apply(function() {
@@ -31,6 +31,12 @@
                 });
             });
 
+            $scope.$on('socket:room-info-failure', function(event, data) {
+                $log.log('Room Event: ', event.name);
+                $log.log(data);
+                $location.url('/');
+            });
+
             $scope.leaveRoom = function() {
                 $log.log('leaving...: ' + JSON.stringify({playerName: $scope.playerName, roomId: $scope.room.id}));
                 musSocketService.emit('leave-room', $scope.room.id);
@@ -38,7 +44,7 @@
 
             $scope.$on('socket:leave-room-success', function(event) {
                 $log.log('Room Event: ', event.name);
-                $location.url( '/');
+                $location.url('/');
             });
 
             $scope.$on('socket:player-left', function(event, data) {

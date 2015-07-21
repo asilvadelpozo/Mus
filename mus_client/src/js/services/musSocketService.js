@@ -9,7 +9,6 @@
             socket.forward('room-info-success');
             socket.forward('room-info-failure');
 
-            socket.forward('room-join-success');
             socket.forward('room-join-failure');
             socket.forward('new-player-joined');
 

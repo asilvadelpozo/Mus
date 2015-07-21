@@ -6,16 +6,8 @@
 <!--<aside class="players">-->
 <!--</aside>-->
 <!--</div>-->
-
-
-<input data-ng-model="playerName"/>
-<br>
 <button type="button" data-ng-click="createRoom()">New Room</button>
 <br>
-
-Player Name: {{playerName}}
-<br>
-
 Players:
 <ul>
     <li data-ng-repeat="player in musModel.players">{{player.playerName}} - {{player.roomId}}</li>

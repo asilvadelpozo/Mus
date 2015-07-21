@@ -8,7 +8,7 @@
         musModel.deletePlayerFromRoom(client.id, roomId);
         client.leave(roomId);
         client.emit('leave-room-success');
-        client.broadcast.to(roomId).emit('player-left', playerName + ' left the room');
+        client.broadcast.to(roomId).emit('player-left', playerName);
         client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
         server.sockets.emit('update-mus', JSON.stringify(musModel));
     };
@@ -26,7 +26,6 @@
                 client.emit('update-mus', JSON.stringify(musModel));
             });
 
-
             client.on('create-room', function(playerName) {
                 var roomId = musModel.createRoom(client.id, playerName);
                 client.emit('room-creation-success', roomId);
@@ -37,22 +36,21 @@
             client.on('join-room', function(playerName, roomId) {
                 if(musModel.addPlayerToRoom(client.id, playerName, roomId)) {
                     client.join(roomId);
-                    client.emit('room-join-success', roomId);
-                    client.broadcast.to(roomId).emit('new-player-joined', playerName + ' joined the room');
-                    client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
+                    client.broadcast.to(roomId).emit('new-player-joined', playerName);
+                    server.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
                     server.sockets.emit('update-mus', JSON.stringify(musModel));
                 } else {
-                    client.emit('room-join-failure', playerName + ': You could not connected to ' + roomId);
+                    client.emit('room-join-failure');
                 }
             });
 
             client.on('room-info', function(roomId) {
-                if(musModel.isUserPlayingInRoom(client.id, roomId)) {
-                    client.emit('room-info-success', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: musModel.getPlayers()[client.id].playerName}));
+                if(typeof musModel.getRoomsModel().getRoomById(roomId) === 'undefined') {
+                    client.emit('room-info-failure', roomId);
                 } else {
-                    client.emit('room-info-failure', 'You are attempting to enter a room in an invalid way');
+                    var playerName = (typeof musModel.getPlayers()[client.id] === 'undefined' ? '' : musModel.getPlayers()[client.id].playerName);
+                    client.emit('room-info-success', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: playerName}));
                 }
-
             });
 
             client.on('leave-room', function(data) {

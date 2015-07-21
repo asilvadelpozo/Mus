@@ -47,6 +47,7 @@
 
     RoomModel.prototype.toJSON = function() {
         var data = {};
+        data.maxPlayers = MAX_PLAYERS;
         data.game = this.game;
         data.id = this.id;
         data.players = this.players;

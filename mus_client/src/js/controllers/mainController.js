@@ -2,47 +2,47 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('mainCtrl', ['$scope', '$log', '$location', 'musSocketService', function($scope, $log, $location, musSocketService) {
+        .controller('mainCtrl', ['$scope', '$location', 'ngDialog', 'musSocketService', function($scope, $location, ngDialog, musSocketService) {
             $scope.musModel = {};
             $scope.playerName = '';
 
             musSocketService.emit('mus-info');
 
-            $scope.updateModel = function(model) {
-                $scope.musModel = model;
-                $log.log($scope.musModel);
-            };
-
             $scope.createRoom = function() {
-                $log.log('Main Player Name: ', $scope.playerName);
-                musSocketService.emit('create-room', $scope.playerName);
+                ngDialog.openConfirm({
+                    template: './src/views/ngDialogTemplates/createRoomDialog.html',
+                    className: 'ngdialog-theme-default',
+                    preCloseCallback: function() {
+                        var nestedConfirmDialog = ngDialog.openConfirm({
+                            template: './src/views/ngDialogTemplates/nameMissingConfirmationDialog.html',
+                            className: 'ngdialog-theme-default'
+                        });
+                        return nestedConfirmDialog;
+                    },
+                    scope: $scope
+                })
+                    .then(function(value){
+                        $scope.playerName = value;
+                        if(typeof $scope.playerName !== 'undefined' && $scope.playerName !== '') {
+                            musSocketService.emit('create-room', $scope.playerName);
+                        }
+                    });
             };
 
             $scope.$on('socket:room-creation-success', function(event, data) {
-                $log.log('Main Event: ', event.name);
                 $location.url( "/room/" + data );
-            });
-
-            $scope.$on('socket:room-join-success', function(event, data) {
-                $log.log('Main Event: ', event.name);
-                $location.url( "/room/" + data );
-            });
-
-            $scope.$on('socket:room-join-failure', function(event, data) {
-                $log.log('Main Event: ', event.name);
-                $log.log(data);
             });
 
             $scope.$on('socket:update-mus', function(event, data) {
-                $log.log('Main Event: ', event.name);
-                $scope.$apply(function() {
-                    $scope.updateModel(JSON.parse(data));
-                });
+                $scope.updateModel(JSON.parse(data));
             });
 
+            $scope.updateModel = function(model) {
+                $scope.musModel = model;
+            };
+
             $scope.joinRoom = function(roomId) {
-                $log.log('Trying to join room: ' + roomId);
-                musSocketService.emit('join-room', $scope.playerName, roomId);
+                $location.url( "/room/" + roomId );
             };
 
         }]);

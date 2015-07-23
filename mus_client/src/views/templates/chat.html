@@ -1,0 +1,7 @@
+<aside class="chat">
+    <textarea class="chat__log" data-ng-disabled="true" data-ng-model="chatLog"></textarea>
+    <form role='form' novalidate name='form'>
+        <input type='text' class="chat__message" required data-ng-max='50' data-ng-model='message' focus>
+        <button class='button' data-ng-enable='form.$valid' data-ng-click="sendMessage(message)">Send!</button>
+    </form>
+</aside>

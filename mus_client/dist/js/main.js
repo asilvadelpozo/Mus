@@ -5,6 +5,46 @@
 
 })();
 
+(function () {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('chatController', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
+            $scope.chatLog = '';
+            $scope.message = '';
+
+            $scope.$on('socket:room-join-success', function(event, playerName) {
+                $scope.updateLog('Room', 'Welcome to the room ' + playerName + '!');
+            });
+
+            $scope.$on('socket:new-message', function(event, data) {
+                $scope.updateLog(JSON.parse(data).playerName, JSON.parse(data).message);
+            });
+
+            $scope.$on('socket:new-player-joined', function(event, playerName) {
+                $scope.updateLog('Room', playerName + ' has joined the room');
+            });
+
+            $scope.$on('socket:player-left', function(event, playerName) {
+                $scope.updateLog('Room', playerName + ' has left the room');
+            });
+
+            $scope.$watch('chatLog', function() {
+                var textArea = $element[0].children[0];
+                textArea.scrollTop = textArea.scrollHeight;
+            });
+
+            $scope.updateLog = function(playerName, message) {
+                $scope.chatLog+= $filter('formatMessage')(playerName, message);
+            };
+
+            $scope.sendMessage = function() {
+                musSocketService.emit('message', $scope.message);
+                $scope.message = '';
+            };
+
+        }]);
+})();
 (function() {
     'use strict';
 
@@ -126,24 +166,8 @@
                 $location.url('/');
             });
 
-            $scope.$on('socket:new-player-joined', function(event, data) {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/playerJoinedRoomDialog.html',
-                    data: {playerName: data},
-                    className: 'ngdialog-theme-default'
-                });
-            });
-
             $scope.$on('socket:leave-room-success', function() {
                 $location.url('/');
-            });
-
-            $scope.$on('socket:player-left', function(event, data) {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/playerLeftRoomDialog.html',
-                    data: {playerName: data},
-                    className: 'ngdialog-theme-default'
-                });
             });
 
             $scope.$on('socket:update-room', function(event, data) {
@@ -175,6 +199,17 @@
 (function() {
     'use strict';
 
+    angular.module('musApp')
+        .filter('formatMessage', function() {
+            return function(playerName, message) {
+                return new Date().toLocaleTimeString() + ' - ' + playerName + ': ' + message + '\n';
+            };
+        });
+})();
+
+(function() {
+    'use strict';
+
     /* This filter will transform this kind of object:
      {
      "key1": "value1",
@@ -196,6 +231,29 @@
         });
 })();
 
+(function() {
+    'use strict';
+
+    angular.module('musApp').directive('chat', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'src/views/templates/chat.html',
+            controller: 'chatController'
+        };
+    });
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp').directive('game', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'src/views/templates/game.html'
+        };
+    });
+})();
 (function () {
     'use strict';
     angular.module('musApp').config(['$routeProvider', function ($routeProvider) {
@@ -218,19 +276,20 @@
     angular.module('musApp')
         .factory('musSocketService', function (socketFactory) {
             var socket = socketFactory();
-            socket.forward('room-creation-success');
+            socket.forward('update-mus');
 
+            socket.forward('update-room');
+            socket.forward('room-creation-success');
             socket.forward('room-info-success');
             socket.forward('room-info-failure');
-
             socket.forward('room-join-failure');
+            socket.forward('room-join-success');
             socket.forward('new-player-joined');
-
             socket.forward('leave-room-success');
             socket.forward('player-left');
 
-            socket.forward('update-mus');
-            socket.forward('update-room');
+            socket.forward('new-message');
+
             return socket;
         });
 })();

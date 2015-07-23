@@ -68,24 +68,8 @@
                 $location.url('/');
             });
 
-            $scope.$on('socket:new-player-joined', function(event, data) {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/playerJoinedRoomDialog.html',
-                    data: {playerName: data},
-                    className: 'ngdialog-theme-default'
-                });
-            });
-
             $scope.$on('socket:leave-room-success', function() {
                 $location.url('/');
-            });
-
-            $scope.$on('socket:player-left', function(event, data) {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/playerLeftRoomDialog.html',
-                    data: {playerName: data},
-                    className: 'ngdialog-theme-default'
-                });
             });
 
             $scope.$on('socket:update-room', function(event, data) {

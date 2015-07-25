@@ -4,14 +4,19 @@
 
     var MAX_PLAYERS = 4;
 
-    var RoomModel = function(roomId) {
+    var RoomModel = function(roomName, roomId) {
         this.id = roomId;
+        this.name = roomName;
         this.game = 'Mus';
         this.players = [];
     };
 
     RoomModel.prototype.getId = function() {
         return this.id;
+    };
+
+    RoomModel.prototype.getName = function() {
+        return this.name;
     };
 
     RoomModel.prototype.getGame = function() {
@@ -50,6 +55,7 @@
         data.maxPlayers = MAX_PLAYERS;
         data.game = this.game;
         data.id = this.id;
+        data.name = this.name;
         data.players = this.players;
         return data;
     };

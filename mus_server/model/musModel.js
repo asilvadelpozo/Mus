@@ -16,9 +16,9 @@
         return this.players;
     };
 
-    MusModel.prototype.createRoom = function(creatorId, creatorName) {
-        var roomId = this.roomsModel.createRoom(creatorName);
-        this.players[creatorId] = {'playerName': creatorName, 'roomId': roomId};
+    MusModel.prototype.createRoom = function(creatorId, roomName, creatorName) {
+        var roomId = this.roomsModel.createRoom(roomName, creatorName);
+        this.players[creatorId] = {'playerName': creatorName, 'roomId': roomId, 'roomName': roomName};
         return roomId;
     };
 
@@ -28,7 +28,7 @@
 
     MusModel.prototype.addPlayerToRoom = function(playerId, playerName, roomId) {
         if (this.roomsModel.addPlayerToRoom(playerName, roomId)) {
-            this.players[playerId] = {'playerName': playerName, 'roomId': roomId};
+            this.players[playerId] = {'playerName': playerName, 'roomId': roomId, 'roomName': this.roomsModel.getRoomById(roomId).name};
             return true;
         }
         return false;

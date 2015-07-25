@@ -1,8 +1,18 @@
-.rooms {
-  font-size: $root-font-size;
-  color: $rooms-font;
-  height: 7em;
-  background-color: red;
-  float: left;
-  width: 63em;
+.action {
+  margin-bottom: 2em;
+}
+
+.room {
+  margin: 1em 0;
+  li {
+    border-left: 0;
+    border-right: 0;
+    &:first-child, &:last-child {
+      border-radius: 0;
+    }
+  }
+}
+
+.roomPlayers {
+  min-height: 12em;
 }

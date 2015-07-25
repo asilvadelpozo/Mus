@@ -16,8 +16,8 @@
             client.emit('update-mus', JSON.stringify(musModel));
         });
 
-        client.on('create-room', function(playerName) {
-            var roomId = musModel.createRoom(client.id, playerName);
+        client.on('create-room', function(data) {
+            var roomId = musModel.createRoom(client.id, JSON.parse(data).roomName, JSON.parse(data).playerName);
             client.emit('room-creation-success', roomId);
             client.join(roomId);
             server.sockets.emit('update-mus', JSON.stringify(musModel));

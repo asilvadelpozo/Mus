@@ -1,24 +1,70 @@
-<!--<div>-->
-<!--<section class="rooms">-->
-<!--List of rooms-->
-<!--</section>-->
+<div class="row">
+    <section class="col-xs-12 col-sm-8 col-md-9">
+        <div class="row">
+            <div class="col-sx-12 col-sm-4 col-md-3 action">
+                <button class="btn btn-block btn-primary" type="button" data-ng-click="createRoom()">Nueva Mesa</button>
+            </div>
 
-<!--<aside class="players">-->
-<!--</aside>-->
-<!--</div>-->
-<button type="button" data-ng-click="createRoom()">New Room</button>
-<br>
-Players:
-<ul>
-    <li data-ng-repeat="player in musModel.players">{{player.playerName}} - {{player.roomId}}</li>
-</ul>
+            <div class="col-xs-12 col-sm-offset-2 col-md-offset-3 col-sm-6 action">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar Mesa..." data-ng-model="search.name">
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
+                </div>
+            </div>
+        </div>
 
-<br>
-Tables
+        <div class="row">
+            <tabset justified="true">
+                <tab heading="Libres">
+                    <div class="col-xs-12 col-sm-6 col-md-4" data-ng-repeat="room in getNotFullRooms() | filter:search:strict">
+                        <div class="thumbnail room">
+                            <div class="caption">
+                                <h3 class="text-center">{{room.name}}&nbsp;<span class="badge">{{room.players.length}}</span></h3>
+                                <ul class="list-group roomPlayers">
+                                    <li class="list-group-item" data-ng-repeat="player in room.players">
+                                        <span class="glyphicon glyphicon-user"></span>&nbsp;<span>{{player}}</span>
+                                    </li>
+                                </ul>
+                                <button class="btn btn-block btn-primary" type="button" data-ng-click="joinRoom(room.id)">Unirse</button>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab class="roomsTab" heading="Completas">
+                    <div class="col-xs-12 col-sm-6 col-md-4" data-ng-repeat="room in getFullRooms() | filter:search:strict">
+                        <div class="thumbnail room">
+                            <div class="caption">
+                                <h3 class="text-center">{{room.name}}&nbsp;<span class="badge">{{room.players.length}}</span></h3>
+                                <ul class="list-group roomPlayers">
+                                    <li class="list-group-item" data-ng-repeat="player in room.players">
+                                        <span class="glyphicon glyphicon-user"></span>&nbsp;<span>{{player}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </section>
 
-<div data-ng-repeat="roomId in [] | getKeys: musModel.roomsModel.rooms">
-    <div>{{roomId}}</div>
-    <button type="button" data-ng-click="joinRoom(roomId)">Join</button>
+    <aside class="col-xs-12 col-sm-4 col-md-3 players">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Jugadores</h3>
+            </div>
+            <div class="panel-body players__panel">
+                <ul class="list-group players__list">
+                    <li class="list-group-item" data-ng-repeat="player in musModel.players">
+                        <span class="glyphicon glyphicon-user"></span>&nbsp;<span>{{player.playerName}}</span>&nbsp;<span class="badge">{{player.roomName}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
 </div>
 
 

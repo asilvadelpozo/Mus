@@ -1,9 +1,17 @@
 .players {
-  font-size: $root-font-size;
-  color: $rooms-font;
-  height: 7em;
-  font-weight: 700;
-  background-color: $players-background;
-  float: right;
-  width: 22em;
+  &__panel {
+    padding: 0;
+  }
+  &__list {
+    height: 35em;
+    overflow-y: scroll;
+    margin: 0;
+    li {
+      border-left: 0;
+      border-right: 0;
+      &:first-child, &:last-child {
+        border-radius: 0;
+      }
+    }
+  }
 }

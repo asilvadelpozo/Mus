@@ -16,9 +16,9 @@
         return this.rooms[id];
     };
 
-    RoomsModel.prototype.createRoom = function(creator) {
-        var roomId = 'room-' + this.counter,
-            roomModel = new RoomModel(roomId);
+    RoomsModel.prototype.createRoom = function(roomName, creator) {
+        var roomId = 'room' + this.counter,
+            roomModel = new RoomModel(roomName, roomId);
         roomModel.addPlayer(creator);
         this.rooms[roomId] = roomModel;
         this.counter++;

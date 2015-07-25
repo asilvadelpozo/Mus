@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('musApp', ['ngRoute', 'ngDialog', 'btford.socket-io']);
+    angular.module('musApp', ['ngRoute', 'ngDialog', 'btford.socket-io', 'ui.bootstrap']);
 
 })();
 
@@ -51,7 +51,6 @@
     angular.module('musApp')
         .controller('mainCtrl', ['$scope', '$location', 'ngDialog', 'musSocketService', function($scope, $location, ngDialog, musSocketService) {
             $scope.musModel = {};
-            $scope.playerName = '';
 
             musSocketService.emit('mus-info');
 
@@ -61,17 +60,16 @@
                     className: 'ngdialog-theme-default',
                     preCloseCallback: function() {
                         var nestedConfirmDialog = ngDialog.openConfirm({
-                            template: './src/views/ngDialogTemplates/nameMissingConfirmationDialog.html',
+                            template: './src/views/ngDialogTemplates/roomCreationMissingInfoConfirmationDialog.html',
                             className: 'ngdialog-theme-default'
                         });
                         return nestedConfirmDialog;
                     },
                     scope: $scope
                 })
-                    .then(function(value){
-                        $scope.playerName = value;
-                        if(typeof $scope.playerName !== 'undefined' && $scope.playerName !== '') {
-                            musSocketService.emit('create-room', $scope.playerName);
+                    .then(function(data){
+                        if(typeof data.roomName !== 'undefined' && data.roomName !== '' && typeof data.playerName !== 'undefined' && data.playerName !== '') {
+                            musSocketService.emit('create-room', JSON.stringify({roomName: data.roomName, playerName: data.playerName}));
                         }
                     });
             };
@@ -90,6 +88,30 @@
 
             $scope.joinRoom = function(roomId) {
                 $location.url( "/room/" + roomId );
+            };
+
+            $scope.getFullRooms = function() {
+                var result = [];
+                if(typeof $scope.musModel.roomsModel !== 'undefined') {
+                    for(var roomId in $scope.musModel.roomsModel.rooms) {
+                        if($scope.musModel.roomsModel.rooms[roomId].players.length === $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                            result.push($scope.musModel.roomsModel.rooms[roomId]);
+                        }
+                    }
+                }
+                return result;
+            };
+
+            $scope.getNotFullRooms = function() {
+                var result = [];
+                if(typeof $scope.musModel.roomsModel !== 'undefined') {
+                    for (var roomId in $scope.musModel.roomsModel.rooms) {
+                        if ($scope.musModel.roomsModel.rooms[roomId].players.length < $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                            result.push($scope.musModel.roomsModel.rooms[roomId]);
+                        }
+                    }
+                }
+                return result;
             };
 
         }]);
@@ -199,41 +221,6 @@
 (function() {
     'use strict';
 
-    angular.module('musApp')
-        .filter('formatMessage', function() {
-            return function(playerName, message) {
-                return new Date().toLocaleTimeString() + ' - ' + playerName + ': ' + message + '\n';
-            };
-        });
-})();
-
-(function() {
-    'use strict';
-
-    /* This filter will transform this kind of object:
-     {
-     "key1": "value1",
-     "key2": "value2"
-     }
-     to this array:
-     [
-     "key1", "key2"
-     ]
-     */
-    angular.module('musApp')
-        .filter('getKeys', function() {
-            return function(input, obj) {
-                for(var key in obj) {
-                    input.push(key);
-                }
-                return input;
-            };
-        });
-})();
-
-(function() {
-    'use strict';
-
     angular.module('musApp').directive('chat', function() {
         return {
             restrict: 'E',
@@ -254,6 +241,31 @@
         };
     });
 })();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .filter('formatMessage', function() {
+            return function(playerName, message) {
+                return new Date().toLocaleTimeString() + ' - ' + playerName + ': ' + message + '\n';
+            };
+        });
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .filter('toArray', function() {
+            return function(input, obj) {
+                for(var key in obj) {
+                    input.push(obj[key]);
+                }
+                return input;
+            };
+        });
+})();
+
 (function () {
     'use strict';
     angular.module('musApp').config(['$routeProvider', function ($routeProvider) {

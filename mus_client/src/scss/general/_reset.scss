@@ -1,7 +1,4 @@
-$root-font-size: 1rem;
-
 body {
-  font-size: $root-font-size;
   font-family: Verdana, sans-serif;
 }
 
@@ -14,4 +11,8 @@ html {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+  cursor: pointer;
 }

@@ -2,29 +2,23 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('mainCtrl', ['$scope', '$location', 'ngDialog', 'musSocketService', function($scope, $location, ngDialog, musSocketService) {
+        .controller('mainCtrl', ['$scope', '$location', '$modal', 'musSocketService', function($scope, $location, $modal, musSocketService) {
             $scope.musModel = {};
 
             musSocketService.emit('mus-info');
 
             $scope.createRoom = function() {
-                ngDialog.openConfirm({
-                    template: './src/views/ngDialogTemplates/createRoomDialog.html',
-                    className: 'ngdialog-theme-default',
-                    preCloseCallback: function() {
-                        var nestedConfirmDialog = ngDialog.openConfirm({
-                            template: './src/views/ngDialogTemplates/roomCreationMissingInfoConfirmationDialog.html',
-                            className: 'ngdialog-theme-default'
-                        });
-                        return nestedConfirmDialog;
-                    },
-                    scope: $scope
-                })
-                    .then(function(data){
-                        if(typeof data.roomName !== 'undefined' && data.roomName !== '' && typeof data.playerName !== 'undefined' && data.playerName !== '') {
-                            musSocketService.emit('create-room', JSON.stringify({roomName: data.roomName, playerName: data.playerName}));
-                        }
-                    });
+
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'src/views/modals/createRoomModal.html',
+                    controller: 'createRoomModalCtrl',
+                    size: 'sm'
+                });
+
+                modalInstance.result.then(function (data) {
+                    musSocketService.emit('create-room', JSON.stringify({roomName: data.roomName, playerName: data.playerName}));
+                });
             };
 
             $scope.$on('socket:room-creation-success', function(event, data) {

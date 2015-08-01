@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h3 class="modal-title">Nueva Mesa</h3>
+</div>
+<div class="modal-body">
+    <alert type="danger" data-ng-show="roomNameIsMissing()">Nombre de mesa no válido.</alert>
+    <div class="form-group">
+        <label for="roomName">Nombre de Mesa:</label>
+        <input type="text" class="form-control" id="roomName" placeholder="Mesa..." data-ng-model="roomName">
+    </div>
+    <alert type="danger" data-ng-show="playerNameIsMissing()">Nick no válido.</alert>
+    <div class="form-group">
+        <label for="playerName">Tu Nick:</label>
+        <input type="text" class="form-control" id="playerName" placeholder="Nick..." data-ng-model="playerName">
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" data-ng-click="ok()">OK</button>
+    <button class="btn btn-danger" data-ng-click="cancel()">Cancelar</button>
+</div>

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('musApp', ['ngRoute', 'ngDialog', 'btford.socket-io', 'ui.bootstrap']);
+    angular.module('musApp', ['ngRoute', 'btford.socket-io', 'ui.bootstrap']);
 
 })();
 
@@ -49,29 +49,23 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('mainCtrl', ['$scope', '$location', 'ngDialog', 'musSocketService', function($scope, $location, ngDialog, musSocketService) {
+        .controller('mainCtrl', ['$scope', '$location', '$modal', 'musSocketService', function($scope, $location, $modal, musSocketService) {
             $scope.musModel = {};
 
             musSocketService.emit('mus-info');
 
             $scope.createRoom = function() {
-                ngDialog.openConfirm({
-                    template: './src/views/ngDialogTemplates/createRoomDialog.html',
-                    className: 'ngdialog-theme-default',
-                    preCloseCallback: function() {
-                        var nestedConfirmDialog = ngDialog.openConfirm({
-                            template: './src/views/ngDialogTemplates/roomCreationMissingInfoConfirmationDialog.html',
-                            className: 'ngdialog-theme-default'
-                        });
-                        return nestedConfirmDialog;
-                    },
-                    scope: $scope
-                })
-                    .then(function(data){
-                        if(typeof data.roomName !== 'undefined' && data.roomName !== '' && typeof data.playerName !== 'undefined' && data.playerName !== '') {
-                            musSocketService.emit('create-room', JSON.stringify({roomName: data.roomName, playerName: data.playerName}));
-                        }
-                    });
+
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'src/views/modals/createRoomModal.html',
+                    controller: 'createRoomModalCtrl',
+                    size: 'sm'
+                });
+
+                modalInstance.result.then(function (data) {
+                    musSocketService.emit('create-room', JSON.stringify({roomName: data.roomName, playerName: data.playerName}));
+                });
             };
 
             $scope.$on('socket:room-creation-success', function(event, data) {
@@ -122,7 +116,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('roomCtrl', ['$scope', '$location', '$routeParams', 'ngDialog', 'musSocketService', function($scope, $location, $routeParams, ngDialog, musSocketService) {
+        .controller('roomCtrl', ['$scope', '$location', '$routeParams', '$modal', 'musSocketService', function($scope, $location, $routeParams, $modal, musSocketService) {
             $scope.playerName = '';
             $scope.room = {};
 
@@ -133,57 +127,73 @@
                 $scope.updateRoom(JSON.parse(data).room);
                 $scope.playerName = JSON.parse(data).playerName;
                 if($scope.isRoomFull()) {
-                    ngDialog.open({
-                        template: './src/views/ngDialogTemplates/roomFullDialog.html',
-                        data: {roomId: $scope.room.id},
-                        className: 'ngdialog-theme-default'
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'src/views/modals/infoModal.html',
+                        controller: 'infoModalCtrl',
+                        size: 'sm',
+                        resolve: {
+                            infoData: function () {
+                                return {
+                                    title: 'Mesa llena',
+                                    message: 'Lo sentimos pero esta mesa está llena. Prueba en otra!'
+                                };
+                            }
+                        }
                     });
                     $location.url('/');
                 } else {
                     if (!$scope.isUserInRoomAlready()) { // This can be true only for the creator of the room
-                        ngDialog.openConfirm({
-                            template: './src/views/ngDialogTemplates/joinRoomDialog.html',
-                            className: 'ngdialog-theme-default',
-                            preCloseCallback: function () {
-                                var nestedConfirmDialog = ngDialog.openConfirm({
-                                    template: './src/views/ngDialogTemplates/nameMissingConfirmationDialog.html',
-                                    className: 'ngdialog-theme-default'
-                                });
-                                return nestedConfirmDialog;
-                            },
-                            scope: $scope
-                        })
-                            .then(function (value) {
-                                $scope.playerName = value;
-                                if (typeof $scope.playerName !== 'undefined' && $scope.playerName !== '') {
-                                    musSocketService.emit('join-room', $scope.playerName, $scope.room.id);
-                                } else {
-                                    ngDialog.open({
-                                        template: './src/views/ngDialogTemplates/noValidNameDialog.html',
-                                        className: 'ngdialog-theme-default'
-                                    });
-                                    $location.url('/');
-                                }
-                            }, function () {
-                                $location.url('/');
-                            });
+
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'src/views/modals/joinRoomModal.html',
+                            controller: 'joinRoomModalCtrl',
+                            size: 'sm'
+                        });
+
+                        modalInstance.result.then(function (data) {
+                            $scope.playerName = data.playerName;
+                            musSocketService.emit('join-room', $scope.playerName, $scope.room.id);
+                        }, function () {
+                            $location.url('/');
+                        });
                     }
                 }
             });
 
-            $scope.$on('socket:room-info-failure', function(event, data) {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/noValidRoomDialog.html',
-                    data: {roomId: data},
-                    className: 'ngdialog-theme-default'
+            $scope.$on('socket:room-info-failure', function() {
+                $modal.open({
+                    animation: true,
+                    templateUrl: 'src/views/modals/infoModal.html',
+                    controller: 'infoModalCtrl',
+                    size: 'sm',
+                    resolve: {
+                        infoData: function () {
+                            return {
+                                title: 'Mesa no válida',
+                                message: 'La mesa a la que estas intentando acceder no existe. Prueba en otra!'
+                            };
+                        }
+                    }
                 });
                 $location.url('/');
             });
 
             $scope.$on('socket:room-join-failure', function() {
-                ngDialog.open({
-                    template: './src/views/ngDialogTemplates/joinRoomFailureDialog.html',
-                    className: 'ngdialog-theme-default'
+                $modal.open({
+                    animation: true,
+                    templateUrl: 'src/views/modals/infoModal.html',
+                    controller: 'infoModalCtrl',
+                    size: 'sm',
+                    resolve: {
+                        infoData: function () {
+                            return {
+                                title: 'Error al unirse a la mesa',
+                                message: 'Lo sentimos. Hubo un error al acceder a la mesa. Pruebe en otra!'
+                            };
+                        }
+                    }
                 });
                 $location.url('/');
             });
@@ -303,5 +313,81 @@
             socket.forward('new-message');
 
             return socket;
+        });
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('createRoomModalCtrl', function ($scope, $modalInstance) {
+
+            $scope.roomName = '';
+            $scope.playerName = '';
+
+            $scope.nothingSubmittedYet = true;
+
+            $scope.roomNameIsMissing = function() {
+                return !$scope.nothingSubmittedYet && (typeof $scope.roomName === 'undefined' || $scope.roomName === '');
+            };
+
+            $scope.playerNameIsMissing = function() {
+                return !$scope.nothingSubmittedYet && (typeof $scope.playerName === 'undefined' || $scope.playerName === '');
+            };
+
+            $scope.ok = function () {
+                $scope.nothingSubmittedYet = false;
+                if(!$scope.roomNameIsMissing() && !$scope.playerNameIsMissing()) {
+                    $modalInstance.close({
+                        roomName: $scope.roomName,
+                        playerName: $scope.playerName
+                    });
+                }
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        });
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('infoModalCtrl', function ($scope, $modalInstance, infoData) {
+
+            $scope.infoData = infoData;
+
+            $scope.ok = function () {
+                $modalInstance.close();
+            };
+        });
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('joinRoomModalCtrl', function ($scope, $modalInstance) {
+
+            $scope.playerName = '';
+
+            $scope.nothingSubmittedYet = true;
+
+            $scope.playerNameIsMissing = function() {
+                return !$scope.nothingSubmittedYet && (typeof $scope.playerName === 'undefined' || $scope.playerName === '');
+            };
+
+            $scope.ok = function () {
+                $scope.nothingSubmittedYet = false;
+                if(!$scope.playerNameIsMissing()) {
+                    $modalInstance.close({
+                        playerName: $scope.playerName
+                    });
+                }
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
         });
 })();

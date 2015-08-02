@@ -3,7 +3,7 @@
 
     angular.module('musApp')
         .controller('chatController', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
-            $scope.chatLog = '';
+            $scope.chatLog = [];
             $scope.message = '';
 
             $scope.$on('socket:room-join-success', function(event, playerName) {
@@ -28,7 +28,7 @@
             });
 
             $scope.updateLog = function(playerName, message) {
-                $scope.chatLog+= $filter('formatMessage')(playerName, message);
+                $scope.chatLog.push($filter('formatMessage')(playerName, message));
             };
 
             $scope.sendMessage = function() {

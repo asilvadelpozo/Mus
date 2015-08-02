@@ -1,7 +1,25 @@
-<aside class="chat">
-    <textarea class="chat__log" data-ng-disabled="true" data-ng-model="chatLog"></textarea>
-    <form role='form' novalidate name='form'>
-        <input type='text' class="chat__message" required data-ng-max='50' data-ng-model='message' focus>
-        <button class='button' data-ng-enable='form.$valid' data-ng-click="sendMessage(message)">Send!</button>
+<aside class="col-xs-12 col-sm-4 col-md-3 chat">
+    <div class="panel panel-primary" data-ng-disabled="true">
+        <div class="panel-heading">
+            <h3 class="panel-title">Chat</h3>
+        </div>
+        <div class="panel-body chat__panel">
+            <ul class="list-group chat__log">
+                <li class="list-group-item" data-ng-repeat="message in chatLog">
+                    <span>{{message}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form role="form" novalidate name="form">
+        <div class="chat__message col-xs-12">
+            <div class="input-group">
+                <input type="text" class="form-control" required data-ng-max="50" placeholder="Mensaje..." data-ng-model="message" focus>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary" data-ng-enable='form.$valid' data-ng-click="sendMessage()">Enviar</button>
+                </span>
+            </div>
+        </div>
     </form>
 </aside>

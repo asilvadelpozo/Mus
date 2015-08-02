@@ -1,5 +1,9 @@
 .game {
-  font-size: $root-font-size;
-  width: 75%;
-  float: left;
+  &__header {
+    margin-top: 0;
+    margin-bottom: 1em;
+    h2 {
+      margin-top: 0;
+    }
+  }
 }

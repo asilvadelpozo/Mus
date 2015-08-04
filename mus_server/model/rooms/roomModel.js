@@ -8,7 +8,7 @@
         this.id = roomId;
         this.name = roomName;
         this.game = 'Mus';
-        this.players = [];
+        this.players = [null, null, null, null];
     };
 
     RoomModel.prototype.getId = function() {
@@ -31,9 +31,21 @@
         return MAX_PLAYERS;
     };
 
+    RoomModel.prototype.findFirstGap = function() {
+        var index = 0;
+        while(index < MAX_PLAYERS) {
+            if(this.players[index] === null) {
+                return index;
+            }
+            index++;
+        }
+        return index;
+    };
+
     RoomModel.prototype.addPlayer = function(playerName) {
-        if(this.players.length < MAX_PLAYERS) {
-            this.players.push(playerName);
+        var firstGap = this.findFirstGap();
+        if(firstGap < MAX_PLAYERS) {
+            this.players[firstGap] = playerName;
             return true;
         }
         return false;
@@ -42,12 +54,19 @@
     RoomModel.prototype.deletePlayer = function(playerName) {
         var indexPlayer = this.players.indexOf(playerName);
         if(indexPlayer > -1) {
-            this.players.splice(indexPlayer, 1);
+            this.players[indexPlayer] = null;
         }
     };
 
     RoomModel.prototype.isEmpty = function() {
-        return this.players.length === 0;
+        var index = 0;
+        while(index < MAX_PLAYERS) {
+            if(this.players[index] !== null) {
+                return false;
+            }
+            index++;
+        }
+        return true;
     };
 
     RoomModel.prototype.toJSON = function() {

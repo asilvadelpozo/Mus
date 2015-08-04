@@ -97,11 +97,32 @@
                 $location.url( "/room/" + roomId );
             };
 
+            $scope.roomSize = function(room) {
+                var size = 0;
+                room.players.forEach(function(entry) {
+                    if(entry !== null) {
+                        size++;
+                    }
+                });
+                return size;
+            };
+
+            $scope.isRoomFull = function(room) {
+                var index = 0;
+                while(index < room.maxPlayers) {
+                    if(room.players[index] === null) {
+                        return false;
+                    }
+                    index++;
+                }
+                return true;
+            };
+
             $scope.getFullRooms = function() {
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for(var roomId in $scope.musModel.roomsModel.rooms) {
-                        if($scope.musModel.roomsModel.rooms[roomId].players.length === $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                        if($scope.isRoomFull($scope.musModel.roomsModel.rooms[roomId])) {
                             result.push($scope.musModel.roomsModel.rooms[roomId]);
                         }
                     }
@@ -113,7 +134,7 @@
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
-                        if ($scope.musModel.roomsModel.rooms[roomId].players.length < $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                        if (!$scope.isRoomFull($scope.musModel.roomsModel.rooms[roomId])) {
                             result.push($scope.musModel.roomsModel.rooms[roomId]);
                         }
                     }
@@ -226,7 +247,14 @@
             };
 
             $scope.isRoomFull = function() {
-                return $scope.room.maxPlayers === $scope.room.players.length;
+                var index = 0;
+                while(index < $scope.room.maxPlayers) {
+                    if($scope.room.players[index] === null) {
+                        return false;
+                    }
+                    index++;
+                }
+                return true;
             };
 
             $scope.isUserInRoomAlready = function() {
@@ -293,23 +321,15 @@
     'use strict';
 
     angular.module('musApp')
-        .filter('formatMessage', function() {
-            return function(playerName, message) {
-                return new Date().toLocaleTimeString() + ' - ' + playerName + ': ' + message + '\n';
-            };
-        });
-})();
-
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .filter('toArray', function() {
-            return function(input, obj) {
-                for(var key in obj) {
-                    input.push(obj[key]);
-                }
-                return input;
+        .filter('withoutNull', function() {
+            return function(input) {
+                var result = [];
+                input.forEach(function(entry) {
+                    if(entry !== null) {
+                        result.push(entry);
+                    }
+                });
+                return result;
             };
         });
 })();

@@ -99,7 +99,14 @@
             };
 
             $scope.isRoomFull = function() {
-                return $scope.room.maxPlayers === $scope.room.players.length;
+                var index = 0;
+                while(index < $scope.room.maxPlayers) {
+                    if($scope.room.players[index] === null) {
+                        return false;
+                    }
+                    index++;
+                }
+                return true;
             };
 
             $scope.isUserInRoomAlready = function() {

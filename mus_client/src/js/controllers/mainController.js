@@ -37,11 +37,32 @@
                 $location.url( "/room/" + roomId );
             };
 
+            $scope.roomSize = function(room) {
+                var size = 0;
+                room.players.forEach(function(entry) {
+                    if(entry !== null) {
+                        size++;
+                    }
+                });
+                return size;
+            };
+
+            $scope.isRoomFull = function(room) {
+                var index = 0;
+                while(index < room.maxPlayers) {
+                    if(room.players[index] === null) {
+                        return false;
+                    }
+                    index++;
+                }
+                return true;
+            };
+
             $scope.getFullRooms = function() {
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for(var roomId in $scope.musModel.roomsModel.rooms) {
-                        if($scope.musModel.roomsModel.rooms[roomId].players.length === $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                        if($scope.isRoomFull($scope.musModel.roomsModel.rooms[roomId])) {
                             result.push($scope.musModel.roomsModel.rooms[roomId]);
                         }
                     }
@@ -53,7 +74,7 @@
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
-                        if ($scope.musModel.roomsModel.rooms[roomId].players.length < $scope.musModel.roomsModel.rooms[roomId].maxPlayers) {
+                        if (!$scope.isRoomFull($scope.musModel.roomsModel.rooms[roomId])) {
                             result.push($scope.musModel.roomsModel.rooms[roomId]);
                         }
                     }

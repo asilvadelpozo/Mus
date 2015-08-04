@@ -6,20 +6,26 @@
             $scope.chatLog = [];
             $scope.message = '';
 
-            $scope.$on('socket:room-join-success', function(event, playerName) {
-                $scope.updateLog('Mesa', '¡Bienvenido a la mesa ' + playerName + '!');
+            $scope.$on('socket:room-join-success', function(event, data) {
+                var roomName = JSON.parse(data).room.name,
+                    playerName = JSON.parse(data).playerName;
+                $scope.updateLog(roomName, '¡Bienvenido a ' + roomName + ' ' + playerName + '!');
             });
 
             $scope.$on('socket:new-message', function(event, data) {
                 $scope.updateLog(JSON.parse(data).playerName, JSON.parse(data).message);
             });
 
-            $scope.$on('socket:new-player-joined', function(event, playerName) {
-                $scope.updateLog('Mesa', playerName + ' se ha unido a la mesa.');
+            $scope.$on('socket:new-player-joined', function(event, data) {
+                var roomName = JSON.parse(data).room.name,
+                    playerName = JSON.parse(data).playerName;
+                $scope.updateLog(roomName, playerName + ' se ha unido a ' + roomName + '.');
             });
 
-            $scope.$on('socket:player-left', function(event, playerName) {
-                $scope.updateLog('Mesa', playerName + ' ha abandonado la mesa.');
+            $scope.$on('socket:player-left', function(event, data) {
+                var roomName = JSON.parse(data).room.name,
+                    playerName = JSON.parse(data).playerName;
+                $scope.updateLog(roomName, playerName + ' ha abandonado ' + roomName + '.');
             });
 
             $scope.$watchCollection('chatLog', function() {

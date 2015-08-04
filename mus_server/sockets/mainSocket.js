@@ -9,7 +9,7 @@
                 musModel.deletePlayerFromRoom(client.id, roomId);
                 client.leave(roomId);
                 client.emit('leave-room-success');
-                client.broadcast.to(roomId).emit('player-left', playerName);
+                client.broadcast.to(roomId).emit('player-left', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: playerName}));
                 client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
                 server.sockets.emit('update-mus', JSON.stringify(musModel));
             }

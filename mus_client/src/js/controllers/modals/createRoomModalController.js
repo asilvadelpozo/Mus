@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('createRoomModalCtrl', function ($scope, $modalInstance) {
+        .controller('createRoomModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
             $scope.roomName = '';
             $scope.playerName = '';
@@ -30,5 +30,5 @@
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-        });
+        }]);
 })();

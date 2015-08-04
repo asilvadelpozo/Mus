@@ -1,12 +1,12 @@
 <aside class="col-xs-12 col-sm-4 col-md-3 chat">
     <div class="panel panel-primary" data-ng-disabled="true">
         <div class="panel-heading">
-            <h3 class="panel-title">Chat</h3>
+            <span class="glyphicon glyphicon-comment"></span> <h3 class="panel-title chat__title">Chat</h3>
         </div>
         <div class="panel-body chat__panel">
             <ul class="list-group chat__log">
                 <li class="list-group-item" data-ng-repeat="message in chatLog">
-                    <span>{{message}}</span>
+                    <message data-message="message" data-player-name="playerName" data-players="players"></message>
                 </li>
             </ul>
         </div>

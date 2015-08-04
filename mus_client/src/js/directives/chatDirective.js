@@ -6,6 +6,10 @@
             restrict: 'E',
             replace: true,
             templateUrl: 'src/views/templates/chat.html',
+            scope: {
+                playerName: '=',
+                players: '='
+            },
             controller: 'chatController'
         };
     });

@@ -7,7 +7,7 @@
             $scope.message = '';
 
             $scope.$on('socket:room-join-success', function(event, playerName) {
-                $scope.updateLog('Room', 'Welcome to the room ' + playerName + '!');
+                $scope.updateLog('Mesa', '¡Bienvenido a la mesa ' + playerName + '!');
             });
 
             $scope.$on('socket:new-message', function(event, data) {
@@ -15,20 +15,27 @@
             });
 
             $scope.$on('socket:new-player-joined', function(event, playerName) {
-                $scope.updateLog('Room', playerName + ' has joined the room');
+                $scope.updateLog('Mesa', playerName + ' se ha unido a la mesa.');
             });
 
             $scope.$on('socket:player-left', function(event, playerName) {
-                $scope.updateLog('Room', playerName + ' has left the room');
+                $scope.updateLog('Mesa', playerName + ' ha abandonado la mesa.');
             });
 
-            $scope.$watch('chatLog', function() {
-                var textArea = $element[0].children[0];
-                textArea.scrollTop = textArea.scrollHeight;
+            $scope.$watchCollection('chatLog', function() {
+                $scope.$evalAsync(function() {
+                    var chatLog = $element[0].getElementsByClassName('chat__panel')[0];
+                    chatLog.scrollTop = chatLog.scrollHeight;
+                });
+
             });
 
-            $scope.updateLog = function(playerName, message) {
-                $scope.chatLog.push($filter('formatMessage')(playerName, message));
+            $scope.updateLog = function(playerName, content) {
+                $scope.chatLog.push({
+                    playerName: playerName,
+                    time: new Date(),
+                    content: content
+                });
             };
 
             $scope.sendMessage = function() {

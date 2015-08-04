@@ -1,0 +1,21 @@
+.message {
+  padding: 0;
+  &__player {
+    &--0 {
+      color: $chat-player-0;
+    }
+    &--1 {
+      color: $chat-player-1;
+    }
+    &--2 {
+      color: $chat-player-2;
+    }
+    &--3 {
+      color: $chat-player-3;
+    }
+  }
+  p {
+    margin: 0;
+    word-wrap: break-word;
+  }
+}

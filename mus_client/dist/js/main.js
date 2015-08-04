@@ -14,7 +14,7 @@
             $scope.message = '';
 
             $scope.$on('socket:room-join-success', function(event, playerName) {
-                $scope.updateLog('Room', 'Welcome to the room ' + playerName + '!');
+                $scope.updateLog('Mesa', '¡Bienvenido a la mesa ' + playerName + '!');
             });
 
             $scope.$on('socket:new-message', function(event, data) {
@@ -22,20 +22,27 @@
             });
 
             $scope.$on('socket:new-player-joined', function(event, playerName) {
-                $scope.updateLog('Room', playerName + ' has joined the room');
+                $scope.updateLog('Mesa', playerName + ' se ha unido a la mesa.');
             });
 
             $scope.$on('socket:player-left', function(event, playerName) {
-                $scope.updateLog('Room', playerName + ' has left the room');
+                $scope.updateLog('Mesa', playerName + ' ha abandonado la mesa.');
             });
 
-            $scope.$watch('chatLog', function() {
-                var textArea = $element[0].children[0];
-                textArea.scrollTop = textArea.scrollHeight;
+            $scope.$watchCollection('chatLog', function() {
+                $scope.$evalAsync(function() {
+                    var chatLog = $element[0].getElementsByClassName('chat__panel')[0];
+                    chatLog.scrollTop = chatLog.scrollHeight;
+                });
+
             });
 
-            $scope.updateLog = function(playerName, message) {
-                $scope.chatLog.push($filter('formatMessage')(playerName, message));
+            $scope.updateLog = function(playerName, content) {
+                $scope.chatLog.push({
+                    playerName: playerName,
+                    time: new Date(),
+                    content: content
+                });
             };
 
             $scope.sendMessage = function() {
@@ -236,6 +243,10 @@
             restrict: 'E',
             replace: true,
             templateUrl: 'src/views/templates/chat.html',
+            scope: {
+                playerName: '=',
+                players: '='
+            },
             controller: 'chatController'
         };
     });
@@ -248,6 +259,27 @@
             restrict: 'E',
             replace: true,
             templateUrl: 'src/views/templates/game.html'
+        };
+    });
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp').directive('message', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'src/views/templates/message.html',
+            scope: {
+                playerName: '=',
+                message: '=',
+                players: '='
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.getPlayerIndexClass = function() {
+                    return 'message__player--' + $scope.players.indexOf($scope.message.playerName);
+                };
+            }]
         };
     });
 })();
@@ -320,7 +352,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('createRoomModalCtrl', function ($scope, $modalInstance) {
+        .controller('createRoomModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
             $scope.roomName = '';
             $scope.playerName = '';
@@ -348,26 +380,26 @@
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-        });
+        }]);
 })();
 (function() {
     'use strict';
 
     angular.module('musApp')
-        .controller('infoModalCtrl', function ($scope, $modalInstance, infoData) {
+        .controller('infoModalCtrl', ['$scope', '$modalInstance', 'infoData', function ($scope, $modalInstance, infoData) {
 
             $scope.infoData = infoData;
 
             $scope.ok = function () {
                 $modalInstance.close();
             };
-        });
+        }]);
 })();
 (function() {
     'use strict';
 
     angular.module('musApp')
-        .controller('joinRoomModalCtrl', function ($scope, $modalInstance) {
+        .controller('joinRoomModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
             $scope.playerName = '';
 
@@ -389,5 +421,5 @@
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-        });
+        }]);
 })();

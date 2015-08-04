@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('joinRoomModalCtrl', function ($scope, $modalInstance) {
+        .controller('joinRoomModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
             $scope.playerName = '';
 
@@ -24,5 +24,5 @@
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-        });
+        }]);
 })();

@@ -1,0 +1,20 @@
+<div class="message">
+    <div data-ng-if="playerName !== message.playerName">
+        <div class="header clearfix">
+            <strong class="primary-font" data-ng-class="getPlayerIndexClass()">{{message.playerName}}</strong>
+            <small class="pull-right text-muted">
+                <span class="glyphicon glyphicon-time"> </span>{{message.time | date : 'H:mm'}}
+            </small>
+        </div>
+        <p>{{message.content}}</p>
+    </div>
+    <div data-ng-if="playerName === message.playerName">
+        <div class="header clearfix">
+            <small class="text-muted">
+                <span class="glyphicon glyphicon-time"> </span>{{message.time | date : 'H:mm'}}
+            </small>
+            <strong class="pull-right primary-font" data-ng-class="getPlayerIndexClass()">Yo</strong>
+        </div>
+        <p>{{message.content}}</p>
+    </div>
+</div>

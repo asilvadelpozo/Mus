@@ -1,10 +1,13 @@
 .chat {
+  &__title {
+    display: inline-block;
+  }
   &__panel {
     padding: 0;
+    overflow-y: scroll;
+    height: 35em;
   }
   &__log {
-    height: 35em;
-    overflow-y: scroll;
     margin: 0;
     li {
       border-left: 0;

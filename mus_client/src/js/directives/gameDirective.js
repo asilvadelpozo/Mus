@@ -5,7 +5,12 @@
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: 'src/views/templates/game.html'
+            scope: {
+                playerName: '=',
+                room: '='
+            },
+            templateUrl: 'src/views/templates/game.html',
+            controller: 'gameCtrl'
         };
     });
 })();

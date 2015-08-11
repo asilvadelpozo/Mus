@@ -1,9 +1,17 @@
 .game {
-  &__header {
-    margin-top: 0;
-    margin-bottom: 1em;
-    h2 {
-      margin-top: 0;
-    }
+  &__table {
+    float: none;
+    display: table-cell;
+    background-color: green;
+    padding-bottom: 75%;
+    border-radius: 1em;
+  }
+  .row--equal {
+    display: table;
+  }
+  .player_vertical {
+    float: none;
+    display: table-cell;
+    vertical-align: middle;
   }
 }

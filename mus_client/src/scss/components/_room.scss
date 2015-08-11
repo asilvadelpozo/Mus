@@ -1,0 +1,11 @@
+.room {
+  margin-top: 0;
+  margin-bottom: 1em;
+  &__header {
+    margin-top: 0;
+    margin-bottom: 1em;
+    h2 {
+      margin-top: 0;
+    }
+  }
+}

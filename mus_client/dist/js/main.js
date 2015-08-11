@@ -9,7 +9,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('chatController', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
+        .controller('chatCtrl', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
             $scope.chatLog = [];
             $scope.message = '';
 
@@ -57,6 +57,24 @@
             };
 
         }]);
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('gameCtrl', ['$scope', function($scope) {
+
+            $scope.getPlayer = function(index) {
+                if(typeof $scope.room.players !== 'undefined') {
+                    var indexOfMainPlayer = $scope.room.players.indexOf($scope.playerName),
+                        realIndex = (indexOfMainPlayer + index) % $scope.room.maxPlayers;
+                    return $scope.room.players[realIndex];
+                }
+                return null;
+            };
+
+        }]);
+
 })();
 (function() {
     'use strict';
@@ -140,6 +158,10 @@
                     }
                 }
                 return result;
+            };
+
+            $scope.getPlayerIndexClass = function(playerName, players) {
+                return (typeof players !== 'undefined') ? 'avatar--mini--' + players.indexOf(playerName) : '';
             };
 
         }]);
@@ -272,6 +294,29 @@
 (function() {
     'use strict';
 
+    angular.module('musApp').directive('avatar', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'src/views/templates/avatar.html',
+            scope: {
+                playerName: '=',
+                players: '='
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.getPlayerIndexClass = function() {
+                    if(typeof $scope.players === 'undefined' || $scope.playerName === null) {
+                        return 'avatar__player--null';
+                    }
+                    return 'avatar__player--' + $scope.players.indexOf($scope.playerName);
+                };
+            }]
+        };
+    });
+})();
+(function() {
+    'use strict';
+
     angular.module('musApp').directive('chat', function() {
         return {
             restrict: 'E',
@@ -281,7 +326,7 @@
                 playerName: '=',
                 players: '='
             },
-            controller: 'chatController'
+            controller: 'chatCtrl'
         };
     });
 })();
@@ -292,7 +337,12 @@
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: 'src/views/templates/game.html'
+            scope: {
+                playerName: '=',
+                room: '='
+            },
+            templateUrl: 'src/views/templates/game.html',
+            controller: 'gameCtrl'
         };
     });
 })();

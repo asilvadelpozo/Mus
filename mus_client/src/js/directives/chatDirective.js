@@ -10,7 +10,7 @@
                 playerName: '=',
                 players: '='
             },
-            controller: 'chatController'
+            controller: 'chatCtrl'
         };
     });
 })();

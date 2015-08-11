@@ -2,7 +2,7 @@
   margin-bottom: 2em;
 }
 
-.room {
+.rooms {
   margin: 1em 0;
   li {
     border-left: 0;
@@ -10,9 +10,38 @@
     &:first-child, &:last-child {
       border-radius: 0;
     }
+    .avatar--mini {
+      &--0 {
+        background-color: $player-0;
+        color: lighten($player-0, 30%);
+        @extend %avatar--mini;
+      }
+      &--1 {
+        background-color: $player-1;
+        color: lighten($player-1, 30%);
+        @extend %avatar--mini;
+      }
+      &--2 {
+        background-color: $player-2;
+        color: lighten($player-2, 30%);
+        @extend %avatar--mini;
+      }
+      &--3 {
+        background-color: $player-3;
+        color: lighten($player-3, 30%);
+        @extend %avatar--mini;
+      }
+    }
+  }
+  &__players {
+    min-height: 12em;
   }
 }
 
-.roomPlayers {
-  min-height: 12em;
+%avatar--mini {
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 0.3em;
+  line-height: 1.5em;
 }
+

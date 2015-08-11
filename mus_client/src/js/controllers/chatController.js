@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('chatController', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
+        .controller('chatCtrl', ['$scope', '$element', '$filter', 'musSocketService', function($scope, $element, $filter, musSocketService) {
             $scope.chatLog = [];
             $scope.message = '';
 

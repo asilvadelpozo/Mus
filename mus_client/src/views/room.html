@@ -1,4 +1,15 @@
 <div class="row">
-    <game></game>
+    <section class="col-xs-12 col-sm-8 col-md-9 room">
+        <div class="row room__header">
+            <h2 class="col-sx-12 col-sm-6 col-md-8">
+                Mesa:
+                <small data-ng-bind="room.name"></small>
+            </h2>
+            <div class="col-sx-12 col-sm-offset-2 col-sm-4 col-md-offset-0 col-md-4">
+                <button type="button" class="btn btn-danger btn-block" data-ng-click="leaveRoom()">Abandonar Mesa</button>
+            </div>
+        </div>
+        <game data-player-name="playerName" data-room="room"></game>
+    </section>
     <chat data-player-name="playerName" data-players="room.players"></chat>
 </div>

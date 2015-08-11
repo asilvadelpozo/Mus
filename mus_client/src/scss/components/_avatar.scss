@@ -1,0 +1,71 @@
+.avatar {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  &__player {
+    &--0 {
+      div {
+        background-color: $player-0;
+        color: lighten($player-0, 30%);
+      }
+      strong {
+        color: $player-0;
+      }
+      @extend %avatar;
+    }
+    &--1 {
+      div {
+        background-color: $player-1;
+        color: lighten($player-1, 30%);
+      }
+      strong {
+        color: $player-1;
+      }
+      @extend %avatar;
+    }
+    &--2 {
+      div {
+        background-color: $player-2;
+        color: lighten($player-2, 30%);
+      }
+      strong {
+        color: $player-2;
+      }
+      @extend %avatar;
+    }
+    &--3 {
+      div {
+        background-color: $player-3;
+        color: lighten($player-3, 30%);
+      }
+      strong {
+        color: $player-3;
+      }
+      @extend %avatar;
+    }
+    &--null {
+      div {
+        background-color: $player-null;
+        color: lighten($player-null, 30%);
+      }
+      strong {
+        color: $player-null;
+      }
+      @extend %avatar;
+    }
+  }
+}
+
+%avatar {
+  div {
+    width: 5em;
+    height: 5em;
+    border-radius: 1em;
+    line-height: 5em;
+    &:before {
+      font-size: 3em;
+    }
+  }
+  strong {
+    display: block;
+  }
+}

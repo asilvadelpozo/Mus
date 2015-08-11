@@ -82,6 +82,10 @@
                 return result;
             };
 
+            $scope.getPlayerIndexClass = function(playerName, players) {
+                return (typeof players !== 'undefined') ? 'avatar--mini--' + players.indexOf(playerName) : '';
+            };
+
         }]);
 
 })();

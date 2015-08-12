@@ -1,4 +1,5 @@
 .game {
+  margin-bottom: 1em;
   &__table {
     float: none;
     display: table-cell;
@@ -8,6 +9,7 @@
   }
   .row--equal {
     display: table;
+    margin: 0;
   }
   .player_vertical {
     float: none;

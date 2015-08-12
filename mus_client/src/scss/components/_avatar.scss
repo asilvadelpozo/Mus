@@ -5,7 +5,7 @@
     &--0 {
       div {
         background-color: $player-0;
-        color: lighten($player-0, 30%);
+        color: lighten($player-0, 40%);
       }
       strong {
         color: $player-0;
@@ -15,7 +15,7 @@
     &--1 {
       div {
         background-color: $player-1;
-        color: lighten($player-1, 30%);
+        color: lighten($player-1, 40%);
       }
       strong {
         color: $player-1;
@@ -35,7 +35,7 @@
     &--3 {
       div {
         background-color: $player-3;
-        color: lighten($player-3, 30%);
+        color: lighten($player-3, 40%);
       }
       strong {
         color: $player-3;

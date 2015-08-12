@@ -1,21 +1,106 @@
 .message {
-  padding: 0;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  position: relative;
+  &--right {
+    &:before {
+      @extend %bubble;
+      right: -10px;
+      top: -1px;
+      border: 9px solid;
+      left: auto;
+    }
+    &:after {
+      @extend %bubble;
+      right: -8px;
+      top: 0px;
+      border: 8px solid;
+      left: auto;
+    }
+  }
+  &--left {
+    &:before {
+      @extend %bubble;
+      left: -10px;
+      top: -1px;
+      border: 9px solid;
+      right: auto;
+    }
+    &:after {
+      @extend %bubble;
+      left: -8px;
+      top: 0px;
+      border: 8px solid;
+      right: auto;
+    }
+  }
   &__player {
     &--0 {
       color: $player-0;
+      background-color: lighten($player-0, 40%);
+      border: solid 1px $player-0;
+      &:before {
+        border-color: $player-0 transparent transparent transparent;
+      }
+      &:after {
+        border-color: lighten($player-0, 40%) transparent transparent transparent;
+      }
     }
     &--1 {
       color: $player-1;
+      background-color: lighten($player-1, 40%);
+      border: solid 1px $player-1;
+      &:before {
+        border-color: $player-1 transparent transparent transparent;
+      }
+      &:after {
+        border-color: lighten($player-1, 40%) transparent transparent transparent;
+      }
     }
     &--2 {
       color: $player-2;
+      background-color: lighten($player-2, 30%);
+      border: solid 1px $player-2;
+      &:before {
+        border-color: $player-2 transparent transparent transparent;
+      }
+      &:after {
+        border-color: lighten($player-2, 30%) transparent transparent transparent;
+      }
     }
     &--3 {
       color: $player-3;
+      background-color: lighten($player-3, 40%);
+      border: solid 1px $player-3;
+      &:before {
+        border-color: $player-3 transparent transparent transparent;
+      }
+      &:after {
+        border-color: lighten($player-3, 40%) transparent transparent transparent;
+      }
+    }
+    &--room {
+      color: $player-null;
+      background-color: lighten($player-null, 30%);
+      border: solid 1px $player-null;
+      &:before {
+        border-color: $player-null transparent transparent transparent;
+      }
+      &:after {
+        border-color: lighten($player-null, 30%) transparent transparent transparent;
+      }
     }
   }
   p {
     margin: 0;
     word-wrap: break-word;
   }
+}
+
+%bubble {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: auto;
 }

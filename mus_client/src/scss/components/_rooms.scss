@@ -13,12 +13,12 @@
     .avatar--mini {
       &--0 {
         background-color: $player-0;
-        color: lighten($player-0, 30%);
+        color: lighten($player-0, 40%);
         @extend %avatar--mini;
       }
       &--1 {
         background-color: $player-1;
-        color: lighten($player-1, 30%);
+        color: lighten($player-1, 40%);
         @extend %avatar--mini;
       }
       &--2 {
@@ -28,7 +28,7 @@
       }
       &--3 {
         background-color: $player-3;
-        color: lighten($player-3, 30%);
+        color: lighten($player-3, 40%);
         @extend %avatar--mini;
       }
     }

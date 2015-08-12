@@ -1,56 +1,32 @@
+@mixin avatarColors($color, $lightenPercentage) {
+  div {
+    background-color: $color;
+    color: lighten($color, $lightenPercentage);
+  }
+  strong {
+    color: $color;
+  }
+  @extend %avatar;
+}
+
 .avatar {
   margin-top: 1em;
   margin-bottom: 1em;
   &__player {
     &--0 {
-      div {
-        background-color: $player-0;
-        color: lighten($player-0, 40%);
-      }
-      strong {
-        color: $player-0;
-      }
-      @extend %avatar;
+      @include avatarColors($player-0, 40%);
     }
     &--1 {
-      div {
-        background-color: $player-1;
-        color: lighten($player-1, 40%);
-      }
-      strong {
-        color: $player-1;
-      }
-      @extend %avatar;
+      @include avatarColors($player-1, 40%);
     }
     &--2 {
-      div {
-        background-color: $player-2;
-        color: lighten($player-2, 30%);
-      }
-      strong {
-        color: $player-2;
-      }
-      @extend %avatar;
+      @include avatarColors($player-2, 30%);
     }
     &--3 {
-      div {
-        background-color: $player-3;
-        color: lighten($player-3, 40%);
-      }
-      strong {
-        color: $player-3;
-      }
-      @extend %avatar;
+      @include avatarColors($player-3, 40%);
     }
     &--null {
-      div {
-        background-color: $player-null;
-        color: lighten($player-null, 30%);
-      }
-      strong {
-        color: $player-null;
-      }
-      @extend %avatar;
+      @include avatarColors($player-null, 30%);
     }
   }
 }

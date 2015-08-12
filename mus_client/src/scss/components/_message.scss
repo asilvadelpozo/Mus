@@ -1,3 +1,15 @@
+@mixin messageColors($color, $lightenPercentage) {
+  color: $color;
+  background-color: lighten($color, $lightenPercentage);
+  border: solid 1px $color;
+  &:before {
+    border-color: $color transparent transparent transparent;
+  }
+  &:after {
+    border-color: lighten($color, $lightenPercentage) transparent transparent transparent;
+  }
+}
+
 .message {
   padding: 0.5em;
   border-radius: 0.5em;
@@ -36,59 +48,19 @@
   }
   &__player {
     &--0 {
-      color: $player-0;
-      background-color: lighten($player-0, 40%);
-      border: solid 1px $player-0;
-      &:before {
-        border-color: $player-0 transparent transparent transparent;
-      }
-      &:after {
-        border-color: lighten($player-0, 40%) transparent transparent transparent;
-      }
+      @include messageColors($player-0, 40%);
     }
     &--1 {
-      color: $player-1;
-      background-color: lighten($player-1, 40%);
-      border: solid 1px $player-1;
-      &:before {
-        border-color: $player-1 transparent transparent transparent;
-      }
-      &:after {
-        border-color: lighten($player-1, 40%) transparent transparent transparent;
-      }
+      @include messageColors($player-1, 40%);
     }
     &--2 {
-      color: $player-2;
-      background-color: lighten($player-2, 30%);
-      border: solid 1px $player-2;
-      &:before {
-        border-color: $player-2 transparent transparent transparent;
-      }
-      &:after {
-        border-color: lighten($player-2, 30%) transparent transparent transparent;
-      }
+      @include messageColors($player-2, 30%);
     }
     &--3 {
-      color: $player-3;
-      background-color: lighten($player-3, 40%);
-      border: solid 1px $player-3;
-      &:before {
-        border-color: $player-3 transparent transparent transparent;
-      }
-      &:after {
-        border-color: lighten($player-3, 40%) transparent transparent transparent;
-      }
+      @include messageColors($player-3, 40%);
     }
     &--room {
-      color: $player-null;
-      background-color: lighten($player-null, 30%);
-      border: solid 1px $player-null;
-      &:before {
-        border-color: $player-null transparent transparent transparent;
-      }
-      &:after {
-        border-color: lighten($player-null, 30%) transparent transparent transparent;
-      }
+      @include messageColors($player-null, 30%);
     }
   }
   p {

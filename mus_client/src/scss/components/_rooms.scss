@@ -1,3 +1,9 @@
+@mixin avatarMiniColors($color, $lightenPercentage) {
+  background-color: $color;
+  color: lighten($color, $lightenPercentage);
+  @extend %avatar--mini;
+}
+
 .action {
   margin-bottom: 2em;
 }
@@ -12,24 +18,16 @@
     }
     .avatar--mini {
       &--0 {
-        background-color: $player-0;
-        color: lighten($player-0, 40%);
-        @extend %avatar--mini;
+        @include avatarMiniColors($player-0, 40%);
       }
       &--1 {
-        background-color: $player-1;
-        color: lighten($player-1, 40%);
-        @extend %avatar--mini;
+        @include avatarMiniColors($player-1, 40%);
       }
       &--2 {
-        background-color: $player-2;
-        color: lighten($player-2, 30%);
-        @extend %avatar--mini;
+        @include avatarMiniColors($player-2, 30%);
       }
       &--3 {
-        background-color: $player-3;
-        color: lighten($player-3, 40%);
-        @extend %avatar--mini;
+        @include avatarMiniColors($player-3, 40%);
       }
     }
   }

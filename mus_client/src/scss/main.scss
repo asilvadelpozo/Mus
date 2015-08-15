@@ -1,17 +1,16 @@
 @import "general/reset";
 @import "general/colors";
 
-//
 @import "components/rooms";
 @import "components/players";
 
 @import "components/room";
+@import "components/deck";
 @import "components/game";
+@import "components/game-table";
 @import "components/avatar";
 @import "components/chat";
 @import "components/message";
-//
-//@import "components/deck";
 
 @import "components/footer";
 

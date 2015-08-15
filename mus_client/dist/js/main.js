@@ -5,6 +5,23 @@
 
 })();
 
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .filter('withoutNull', function() {
+            return function(input) {
+                var result = [];
+                input.forEach(function(entry) {
+                    if(entry !== null) {
+                        result.push(entry);
+                    }
+                });
+                return result;
+            };
+        });
+})();
+
 (function () {
     'use strict';
 
@@ -349,6 +366,22 @@
 (function() {
     'use strict';
 
+    angular.module('musApp').directive('gameTable', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                playerName: '=',
+                room: '='
+            },
+            templateUrl: 'src/views/templates/game-table.html',
+            controller: 'gameCtrl'
+        };
+    });
+})();
+(function() {
+    'use strict';
+
     angular.module('musApp').directive('message', function() {
         return {
             restrict: 'E',
@@ -370,23 +403,6 @@
         };
     });
 })();
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .filter('withoutNull', function() {
-            return function(input) {
-                var result = [];
-                input.forEach(function(entry) {
-                    if(entry !== null) {
-                        result.push(entry);
-                    }
-                });
-                return result;
-            };
-        });
-})();
-
 (function () {
     'use strict';
     angular.module('musApp').config(['$routeProvider', function ($routeProvider) {

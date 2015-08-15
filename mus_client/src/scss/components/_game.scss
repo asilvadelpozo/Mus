@@ -1,10 +1,10 @@
 .game {
   margin-bottom: 1em;
-  &__table {
+  &__container {
     float: none;
     display: table-cell;
     background-color: green;
-    padding-bottom: 75%;
+    padding: 0;
     border-radius: 1em;
   }
   .row--equal {

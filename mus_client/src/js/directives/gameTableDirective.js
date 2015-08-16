@@ -10,7 +10,7 @@
                 room: '='
             },
             templateUrl: 'src/views/templates/game-table.html',
-            controller: 'gameCtrl'
+            controller: 'gameTableCtrl'
         };
     });
 })();

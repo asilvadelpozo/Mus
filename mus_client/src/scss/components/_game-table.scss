@@ -14,8 +14,22 @@
   &__row {
     display: table-row;
   }
-  &__empty {
+  &__avatar {
     display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    .avatar__player--0 strong {
+      color: lighten($player-0, 40%);
+    }
+    .avatar__player--1 strong {
+      color: lighten($player-1, 40%);
+    }
+    .avatar__player--2 strong {
+      color: lighten($player-2, 30%);
+    }
+    .avatar__player--3 strong {
+      color: lighten($player-3, 40%);
+    }
   }
   &__player {
     display: table-cell;

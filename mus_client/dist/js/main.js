@@ -80,6 +80,24 @@
     'use strict';
 
     angular.module('musApp')
+        .controller('gameTableCtrl', ['$scope', function($scope) {
+
+            $scope.getPlayer = function(index) {
+                if(typeof $scope.room.players !== 'undefined') {
+                    var indexOfMainPlayer = $scope.room.players.indexOf($scope.playerName),
+                        realIndex = (indexOfMainPlayer + index) % $scope.room.maxPlayers;
+                    return $scope.room.players[realIndex];
+                }
+                return null;
+            };
+
+        }]);
+
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
         .controller('mainCtrl', ['$scope', '$location', '$modal', 'musSocketService', function($scope, $location, $modal, musSocketService) {
             $scope.musModel = {};
 
@@ -358,7 +376,7 @@
                 room: '='
             },
             templateUrl: 'src/views/templates/game-table.html',
-            controller: 'gameCtrl'
+            controller: 'gameTableCtrl'
         };
     });
 })();

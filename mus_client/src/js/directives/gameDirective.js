@@ -10,7 +10,13 @@
                 room: '='
             },
             templateUrl: 'src/views/templates/game.html',
-            controller: 'gameCtrl'
+            controller: ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
+
+                $scope.getPlayer = function(index) {
+                    return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
+                };
+
+            }]
         };
     });
 })();

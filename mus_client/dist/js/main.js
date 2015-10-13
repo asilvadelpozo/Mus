@@ -62,33 +62,10 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('gameCtrl', ['$scope', function($scope) {
+        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
 
             $scope.getPlayer = function(index) {
-                if(typeof $scope.room.players !== 'undefined') {
-                    var indexOfMainPlayer = $scope.room.players.indexOf($scope.playerName),
-                        realIndex = (indexOfMainPlayer + index) % $scope.room.maxPlayers;
-                    return $scope.room.players[realIndex];
-                }
-                return null;
-            };
-
-        }]);
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .controller('gameTableCtrl', ['$scope', function($scope) {
-
-            $scope.getPlayer = function(index) {
-                if(typeof $scope.room.players !== 'undefined') {
-                    var indexOfMainPlayer = $scope.room.players.indexOf($scope.playerName),
-                        realIndex = (indexOfMainPlayer + index) % $scope.room.maxPlayers;
-                    return $scope.room.players[realIndex];
-                }
-                return null;
+                return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
             };
 
         }]);
@@ -368,7 +345,13 @@
                 room: '='
             },
             templateUrl: 'src/views/templates/game.html',
-            controller: 'gameCtrl'
+            controller: ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
+
+                $scope.getPlayer = function(index) {
+                    return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
+                };
+
+            }]
         };
     });
 })();
@@ -467,6 +450,27 @@
 
             return socket;
         });
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('playerLocatorService', function () {
+            function locatePlayer(room, mainPlayerName, targetPlayerIndex) {
+                if (typeof room.players !== 'undefined') {
+                    var indexOfMainPlayer = room.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % room.maxPlayers;
+                    return room.players[realTargetPlayerIndex];
+                }
+                return null;
+            }
+
+            return {
+                locatePlayer: locatePlayer
+            };
+        });
+
 })();
 
 (function() {

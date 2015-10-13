@@ -2,15 +2,10 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('gameTableCtrl', ['$scope', function($scope) {
+        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
 
             $scope.getPlayer = function(index) {
-                if(typeof $scope.room.players !== 'undefined') {
-                    var indexOfMainPlayer = $scope.room.players.indexOf($scope.playerName),
-                        realIndex = (indexOfMainPlayer + index) % $scope.room.maxPlayers;
-                    return $scope.room.players[realIndex];
-                }
-                return null;
+                return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
             };
 
         }]);

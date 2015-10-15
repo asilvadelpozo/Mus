@@ -1,14 +1,12 @@
 (function() {
     'use strict';
 
-
-    var MAX_PLAYERS = 4;
+    var GameModel = require('./../game/gameModel');
 
     var RoomModel = function(roomName, roomId) {
         this.id = roomId;
         this.name = roomName;
-        this.game = 'Mus';
-        this.players = [null, null, null, null];
+        this.game = new GameModel();
     };
 
     RoomModel.prototype.getId = function() {
@@ -24,58 +22,30 @@
     };
 
     RoomModel.prototype.getPlayers = function() {
-        return this.players;
+        return this.game.getPlayers();
     };
 
     RoomModel.prototype.getMaxPlayers = function() {
-        return MAX_PLAYERS;
-    };
-
-    RoomModel.prototype.findFirstGap = function() {
-        var index = 0;
-        while(index < MAX_PLAYERS) {
-            if(this.players[index] === null) {
-                return index;
-            }
-            index++;
-        }
-        return index;
+        return this.game.getMaxPlayers();
     };
 
     RoomModel.prototype.addPlayer = function(playerName) {
-        var firstGap = this.findFirstGap();
-        if(firstGap < MAX_PLAYERS) {
-            this.players[firstGap] = playerName;
-            return true;
-        }
-        return false;
+        return this.game.addPlayer(playerName);
     };
 
     RoomModel.prototype.deletePlayer = function(playerName) {
-        var indexPlayer = this.players.indexOf(playerName);
-        if(indexPlayer > -1) {
-            this.players[indexPlayer] = null;
-        }
+        this.game.deletePlayer(playerName);
     };
 
     RoomModel.prototype.isEmpty = function() {
-        var index = 0;
-        while(index < MAX_PLAYERS) {
-            if(this.players[index] !== null) {
-                return false;
-            }
-            index++;
-        }
-        return true;
+        return this.game.getPlayers().filter(function(player) { return player !== null; }).length === 0;
     };
 
     RoomModel.prototype.toJSON = function() {
         var data = {};
-        data.maxPlayers = MAX_PLAYERS;
-        data.game = this.game;
         data.id = this.id;
         data.name = this.name;
-        data.players = this.players;
+        data.game = this.game;
         return data;
     };
 

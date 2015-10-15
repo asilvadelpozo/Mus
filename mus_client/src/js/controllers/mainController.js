@@ -38,24 +38,11 @@
             };
 
             $scope.roomSize = function(room) {
-                var size = 0;
-                room.players.forEach(function(entry) {
-                    if(entry !== null) {
-                        size++;
-                    }
-                });
-                return size;
+                return room.game.players.filter(function(player) { return player !== null; }).length;
             };
 
             $scope.isRoomFull = function(room) {
-                var index = 0;
-                while(index < room.maxPlayers) {
-                    if(room.players[index] === null) {
-                        return false;
-                    }
-                    index++;
-                }
-                return true;
+                return room.game.players.filter(function(player) { return player !== null; }).length === 4;
             };
 
             $scope.getFullRooms = function() {
@@ -71,6 +58,7 @@
             };
 
             $scope.getNotFullRooms = function() {
+                console.log($scope.musModel);
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
@@ -79,6 +67,7 @@
                         }
                     }
                 }
+                console.log(result);
                 return result;
             };
 

@@ -2,15 +2,19 @@
     'use strict';
 
     var MusModel = require('../model/musModel'),
+        MusDTO = require('../dto/musDTO'),
+        RoomsDTO = require('../dto/rooms/roomsDTO'),
+        RoomDTO = require('../dto/rooms/roomDTO'),
+        GameDTO = require('../dto/game/gameDTO'),
         musModel = new MusModel();
 
     module.exports = function (server) {
 
         server.on('connection', function (client) {
 
-            require('./mainSocket')(server, client, musModel);
+            require('./mainSocket')(server, client, musModel, MusDTO);
 
-            require('./roomSocket')(server, client, musModel);
+            require('./roomSocket')(server, client, musModel, MusDTO, RoomDTO);
 
             require('./chatSocket')(server, client, musModel);
 
@@ -21,9 +25,9 @@
                     musModel.deletePlayerFromRoom(client.id, roomId);
                     client.leave(roomId);
                     client.emit('leave-room-success');
-                    client.broadcast.to(roomId).emit('player-left', JSON.stringify({room: musModel.getRoomsModel().getRoomById(roomId), playerName: playerName}));
-                    client.broadcast.to(roomId).emit('update-room', JSON.stringify(musModel.getRoomsModel().getRoomById(roomId)));
-                    server.sockets.emit('update-mus', JSON.stringify(musModel));
+                    client.broadcast.to(roomId).emit('player-left', JSON.stringify({room: new RoomDTO(musModel.getRoomsModel().getRoomById(roomId)), playerName: playerName}));
+                    client.broadcast.to(roomId).emit('update-room', JSON.stringify(new RoomDTO(musModel.getRoomsModel().getRoomById(roomId))));
+                    server.sockets.emit('update-mus', JSON.stringify(new MusDTO(musModel)));
                 }
             });
 

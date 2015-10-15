@@ -111,24 +111,11 @@
             };
 
             $scope.roomSize = function(room) {
-                var size = 0;
-                room.players.forEach(function(entry) {
-                    if(entry !== null) {
-                        size++;
-                    }
-                });
-                return size;
+                return room.game.players.filter(function(player) { return player !== null; }).length;
             };
 
             $scope.isRoomFull = function(room) {
-                var index = 0;
-                while(index < room.maxPlayers) {
-                    if(room.players[index] === null) {
-                        return false;
-                    }
-                    index++;
-                }
-                return true;
+                return room.game.players.filter(function(player) { return player !== null; }).length === 4;
             };
 
             $scope.getFullRooms = function() {
@@ -144,6 +131,7 @@
             };
 
             $scope.getNotFullRooms = function() {
+                console.log($scope.musModel);
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
@@ -152,6 +140,7 @@
                         }
                     }
                 }
+                console.log(result);
                 return result;
             };
 
@@ -264,18 +253,11 @@
             };
 
             $scope.isRoomFull = function() {
-                var index = 0;
-                while(index < $scope.room.maxPlayers) {
-                    if($scope.room.players[index] === null) {
-                        return false;
-                    }
-                    index++;
-                }
-                return true;
+                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === 4;
             };
 
             $scope.isUserInRoomAlready = function() {
-                return $scope.room.players.indexOf($scope.playerName) > -1;
+                return $scope.room.game.players.indexOf($scope.playerName) > -1;
             };
 
             $scope.leaveRoom = function() {
@@ -301,6 +283,7 @@
             },
             controller: ['$scope', function ($scope) {
                 $scope.getPlayerIndexClass = function() {
+                    console.log('avatarPlayers: ', $scope.players);
                     if(typeof $scope.players === 'undefined' || $scope.playerName === null) {
                         return 'avatar__player--null';
                     }
@@ -458,10 +441,10 @@
     angular.module('musApp')
         .factory('playerLocatorService', function () {
             function locatePlayer(room, mainPlayerName, targetPlayerIndex) {
-                if (typeof room.players !== 'undefined') {
-                    var indexOfMainPlayer = room.players.indexOf(mainPlayerName),
-                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % room.maxPlayers;
-                    return room.players[realTargetPlayerIndex];
+                if (typeof room.game !== 'undefined' && typeof room.game.players !== 'undefined') {
+                    var indexOfMainPlayer = room.game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % room.game.maxPlayers;
+                    return room.game.players[realTargetPlayerIndex];
                 }
                 return null;
             }

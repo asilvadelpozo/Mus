@@ -99,18 +99,11 @@
             };
 
             $scope.isRoomFull = function() {
-                var index = 0;
-                while(index < $scope.room.maxPlayers) {
-                    if($scope.room.players[index] === null) {
-                        return false;
-                    }
-                    index++;
-                }
-                return true;
+                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === 4;
             };
 
             $scope.isUserInRoomAlready = function() {
-                return $scope.room.players.indexOf($scope.playerName) > -1;
+                return $scope.room.game.players.indexOf($scope.playerName) > -1;
             };
 
             $scope.leaveRoom = function() {

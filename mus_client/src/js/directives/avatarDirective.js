@@ -13,6 +13,7 @@
             },
             controller: ['$scope', function ($scope) {
                 $scope.getPlayerIndexClass = function() {
+                    console.log('avatarPlayers: ', $scope.players);
                     if(typeof $scope.players === 'undefined' || $scope.playerName === null) {
                         return 'avatar__player--null';
                     }

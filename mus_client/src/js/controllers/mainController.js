@@ -58,7 +58,6 @@
             };
 
             $scope.getNotFullRooms = function() {
-                console.log($scope.musModel);
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
@@ -67,7 +66,6 @@
                         }
                     }
                 }
-                console.log(result);
                 return result;
             };
 

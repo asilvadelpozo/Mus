@@ -3,9 +3,7 @@
 
     var MusModel = require('../model/musModel'),
         MusDTO = require('../dto/musDTO'),
-        RoomsDTO = require('../dto/rooms/roomsDTO'),
         RoomDTO = require('../dto/rooms/roomDTO'),
-        GameDTO = require('../dto/game/gameDTO'),
         musModel = new MusModel();
 
     module.exports = function (server) {

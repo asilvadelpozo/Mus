@@ -131,7 +131,6 @@
             };
 
             $scope.getNotFullRooms = function() {
-                console.log($scope.musModel);
                 var result = [];
                 if(typeof $scope.musModel.roomsModel !== 'undefined') {
                     for (var roomId in $scope.musModel.roomsModel.rooms) {
@@ -140,7 +139,6 @@
                         }
                     }
                 }
-                console.log(result);
                 return result;
             };
 
@@ -283,7 +281,6 @@
             },
             controller: ['$scope', function ($scope) {
                 $scope.getPlayerIndexClass = function() {
-                    console.log('avatarPlayers: ', $scope.players);
                     if(typeof $scope.players === 'undefined' || $scope.playerName === null) {
                         return 'avatar__player--null';
                     }

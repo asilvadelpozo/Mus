@@ -8,6 +8,12 @@
         this.players = gameModel.getPlayers();
         this.hand = gameModel.getHand();
         this.turn = gameModel.getTurn();
+        this.cards = [
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1]
+        ];
     };
 
     GameDTO.prototype.toJSON = function() {
@@ -16,6 +22,7 @@
         data.players = this.players;
         data.hand = this.hand;
         data.turn = this.turn;
+        data.cards = this.cards;
         return data;
     };
 

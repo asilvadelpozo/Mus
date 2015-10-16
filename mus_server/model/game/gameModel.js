@@ -6,7 +6,7 @@
     var GameModel = function() {
         this.name = 'Mus';
         this.players = [null, null, null, null];
-        this.cards = [];
+        this.cards = [[], [], [], []];
         this.deck = [];
         this.discarded = [];
         this.turn = -1;
@@ -25,8 +25,32 @@
         return this.hand;
     };
 
+    GameModel.prototype.setHand = function(hand) {
+        this.hand = hand;
+    };
+
     GameModel.prototype.getTurn = function() {
         return this.turn;
+    };
+
+    GameModel.prototype.setDeck = function(deck) {
+        this.deck = deck;
+    };
+
+    GameModel.prototype.getDeck = function() {
+        return this.deck;
+    };
+
+    GameModel.prototype.setDiscarded = function(discarded) {
+        this.discarded = discarded;
+    };
+
+    GameModel.prototype.getDiscarded = function() {
+        return this.discarded;
+    };
+
+    GameModel.prototype.getCards = function() {
+        return this.cards;
     };
 
     GameModel.prototype.findFirstGap = function() {

@@ -4,7 +4,9 @@
     var MusModel = require('../model/musModel'),
         MusDTO = require('../dto/musDTO'),
         RoomDTO = require('../dto/rooms/roomDTO'),
-        musModel = new MusModel();
+        GameLogicService = require('../services/gameLogicService'),
+        musModel = new MusModel(),
+        gameLogicService = new GameLogicService();
 
     module.exports = function (server) {
 
@@ -12,7 +14,7 @@
 
             require('./mainSocket')(server, client, musModel, MusDTO);
 
-            require('./roomSocket')(server, client, musModel, MusDTO, RoomDTO);
+            require('./roomSocket')(server, client, musModel, MusDTO, RoomDTO, gameLogicService);
 
             require('./chatSocket')(server, client, musModel);
 

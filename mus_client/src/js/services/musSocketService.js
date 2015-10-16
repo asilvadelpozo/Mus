@@ -17,6 +17,7 @@
             socket.forward('player-left');
 
             socket.forward('game-started');
+            socket.forward('hand-started');
 
             socket.forward('new-message');
 

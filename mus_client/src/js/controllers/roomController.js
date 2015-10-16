@@ -99,7 +99,7 @@
             };
 
             $scope.isRoomFull = function() {
-                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === 4;
+                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === $scope.room.game.maxPlayers;
             };
 
             $scope.isUserInRoomAlready = function() {

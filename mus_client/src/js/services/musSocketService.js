@@ -16,6 +16,8 @@
             socket.forward('leave-room-success');
             socket.forward('player-left');
 
+            socket.forward('game-started');
+
             socket.forward('new-message');
 
             return socket;

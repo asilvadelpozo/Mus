@@ -41,6 +41,10 @@
         return this.game.getPlayers().filter(function(player) { return player !== null; }).length === 0;
     };
 
+    RoomModel.prototype.isFull = function() {
+        return this.game.getPlayers().filter(function(player) { return player !== null; }).length === this.getMaxPlayers();
+    };
+
     RoomModel.prototype.toJSON = function() {
         var data = {};
         data.id = this.id;

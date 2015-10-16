@@ -1,6 +1,6 @@
 (function() {
     'use strict';
 
-    angular.module('musApp', ['ngRoute', 'btford.socket-io', 'ui.bootstrap']);
+    angular.module('musApp', ['ngRoute', 'ngAnimate', 'btford.socket-io', 'ui.bootstrap']);
 
 })();

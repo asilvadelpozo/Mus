@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('musApp', ['ngRoute', 'btford.socket-io', 'ui.bootstrap']);
+    angular.module('musApp', ['ngRoute', 'ngAnimate', 'btford.socket-io', 'ui.bootstrap']);
 
 })();
 
@@ -57,6 +57,33 @@
             };
 
         }]);
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .controller('gameActionsCtrl', ['$scope', 'musSocketService', function($scope, musSocketService) {
+
+            $scope.currentStatus = 'waiting';
+
+            console.log(musSocketService);
+
+            $scope.$on('socket:game-started', function() {
+                $scope.currentStatus = 'game-started';
+            });
+
+            $scope.$on('socket:update-room', function() {
+                if(!$scope.isRoomFull()) {
+                    $scope.currentStatus = 'waiting';
+                }
+            });
+
+            $scope.isRoomFull = function() {
+                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === $scope.room.game.maxPlayers;
+            };
+
+        }]);
+
 })();
 (function() {
     'use strict';
@@ -251,7 +278,7 @@
             };
 
             $scope.isRoomFull = function() {
-                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === 4;
+                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === $scope.room.game.maxPlayers;
             };
 
             $scope.isUserInRoomAlready = function() {
@@ -312,6 +339,23 @@
             controller: 'chatCtrl'
         };
     });
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp').directive('gameActions', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'src/views/templates/game-actions.html',
+            scope: {
+                room : '=',
+                playerName: '='
+            },
+            controller: 'gameActionsCtrl'
+        };
+    });
+
 })();
 (function() {
     'use strict';
@@ -378,6 +422,22 @@
 (function() {
     'use strict';
 
+    angular.module('musApp').directive('spinner', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<div class="spinner">' +
+                            '<div class="bounce1"></div>' +
+                            '<div class="bounce2"></div>' +
+                            '<div class="bounce3"></div>' +
+                      '</div>'
+        };
+    });
+
+})();
+(function() {
+    'use strict';
+
     angular.module('musApp')
         .filter('withoutNull', function() {
             return function(input) {
@@ -425,6 +485,8 @@
             socket.forward('new-player-joined');
             socket.forward('leave-room-success');
             socket.forward('player-left');
+
+            socket.forward('game-started');
 
             socket.forward('new-message');
 

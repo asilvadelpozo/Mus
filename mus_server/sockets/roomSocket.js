@@ -9,6 +9,9 @@
                 client.broadcast.to(roomId).emit('new-player-joined', JSON.stringify({room: new RoomDTO(musModel.getRoomsModel().getRoomById(roomId)), playerName: playerName}));
                 server.to(roomId).emit('update-room', JSON.stringify(new RoomDTO(musModel.getRoomsModel().getRoomById(roomId))));
                 server.sockets.emit('update-mus', JSON.stringify(new MusDTO(musModel)));
+                if(musModel.getRoomsModel().getRoomById(roomId).isFull()) {
+                    server.to(roomId).emit('game-started');
+                }
             } else {
                 client.emit('room-join-failure');
             }

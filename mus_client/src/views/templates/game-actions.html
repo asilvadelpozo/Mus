@@ -1,0 +1,11 @@
+<div class="game-action">
+    <div data-ng-switch="currentStatus">
+        <div class="game-action__panel" data-ng-switch-when="waiting">
+            <div>Esperando a jugadores</div>
+            <spinner></spinner>
+        </div>
+        <div class="game-action__panel" data-ng-switch-when="game-started">
+            <div>¡Comienza la partida!</div>
+        </div>
+    </div>
+</div>

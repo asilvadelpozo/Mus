@@ -4,6 +4,7 @@
   display: inline-block;
   max-width: 100%;
   background-size: 100%;
+  border-radius: 0.5em;
 
   $percentage: 1/9;
 
@@ -43,6 +44,134 @@
   //empty
   &--empty {
     border: solid 2px white;
+  }
+
+  &__animation {
+    &--player0 {
+      -webkit-animation: card-animation-p0 0.32s ease-in-out both;
+      animation: card-animation-p0 0.32s ease-in-out both;
+    }
+    &--player1 {
+      -webkit-animation: card-animation-p1 0.32s ease-in both;
+      animation: card-animation-p1 0.32s ease-in both;
+    }
+    &--player2 {
+      -webkit-animation: card-animation-p2 0.32s ease-in-out both;
+      animation: card-animation-p2 0.32s ease-in-out both;
+    }
+    &--player3 {
+      -webkit-animation: card-animation-p3 0.32s ease-in both;
+      animation: card-animation-p3 0.32s ease-in both;
+    }
+  }
+
+  @for $i from 1 through 16 {
+    &--order#{$i} {
+      -webkit-animation-delay: $i * 0.32s;
+      animation-delay: $i * 0.32s;
+    }
+  }
+
+  @-webkit-keyframes card-animation-p0 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotate(360deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes card-animation-p0 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotate(360deg);
+      transform: translate(0px,-100px) rotate(360deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes card-animation-p1 {
+    0% {
+      opacity: 1;
+      -webkit-transform: translate(-100px,0px) rotate(360deg);
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(-50px,0px) rotate(90deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes card-animation-p1 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(-100px,0px) rotate(270deg);
+      transform: translate(-100px,0px) rotate(270deg);
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(-50px,0px) rotate(90deg);
+      transform: translate(-50px,0px) rotate(90deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes card-animation-p2 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(0px,100px) rotate(360deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes card-animation-p2 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(0px,100px) rotate(360deg);
+      transform: translate(0px,100px) rotate(360deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes card-animation-p3 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(100px,0px) rotate(360deg);
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(50px,0px) rotate(270deg);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes card-animation-p3 {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate(100px,0px) rotate(90deg);
+      transform: translate(100px,0px) rotate(90deg);
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(50px,0px) rotate(270deg);
+      transform: translate(50px,0px) rotate(270deg);
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
 }

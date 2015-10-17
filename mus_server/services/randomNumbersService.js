@@ -10,11 +10,11 @@
         for(var i = from; i <= to; i++) {
             range.push(i);
         }
-        return shuffle(range.slice(0, amount));
+        return shuffle(range).slice(0, amount);
     };
 
     RandomNumbersService.prototype.shuffle = function(array) {
-        return shuffle(array.slice(0, array.length));
+        return shuffle(array);
     };
 
     module.exports = RandomNumbersService;

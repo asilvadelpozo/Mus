@@ -33,6 +33,10 @@
         return this.turn;
     };
 
+    GameModel.prototype.setTurn = function(turn) {
+        this.turn = turn;
+    };
+
     GameModel.prototype.setDeck = function(deck) {
         this.deck = deck;
     };
@@ -51,6 +55,10 @@
 
     GameModel.prototype.getCards = function() {
         return this.cards;
+    };
+
+    GameModel.prototype.resetCards = function() {
+        this.cards = [[], [], [], []];
     };
 
     GameModel.prototype.findFirstGap = function() {

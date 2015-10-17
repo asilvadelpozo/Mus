@@ -9,10 +9,15 @@
         this.dealingService = new DealingService(this.randomNumbersService);
     };
 
+    GameLogicService.prototype.setRandomNumbersService = function(randomNumbersService) {
+        this.randomNumbersService = randomNumbersService;
+    };
+
     GameLogicService.prototype.initializeGame = function(game) {
-        var deck = this.randomNumbersService.getRandomNumbers(1, 40, 40);
-        game.setDeck(deck);
-        game.setHand(0);
+        game.setDeck(this.randomNumbersService.getRandomNumbers(1, 40, 40));
+        game.setHand(this.randomNumbersService.getRandomNumbers(0, 3, 1)[0]);
+        game.setTurn(game.getHand());
+        game.resetCards();
         this.dealingService.dealCards(game, true);
     };
 

@@ -8,7 +8,7 @@ describe('Dealing Service', function() {
 
     beforeEach(function() {
         mockRandomNumbersService = new RandomNumbersService();
-        mockRandomNumbersService.shuffle = jasmine.createSpy("shuffle() spy").andCallFake(function() {
+        mockRandomNumbersService.shuffle = jasmine.createSpy("shuffle").andCallFake(function() {
             var result = [];
 
             for(var i = 17; i <= 40; i++) {
@@ -17,8 +17,8 @@ describe('Dealing Service', function() {
 
             return result;
         });
-        dealingService = new DealingService(mockRandomNumbersService);
         game = new GameModel();
+        dealingService = new DealingService(mockRandomNumbersService);
     });
 
     describe('shiftArrayNPositionsOnDirection', function() {

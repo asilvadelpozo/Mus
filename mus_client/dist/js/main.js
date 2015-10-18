@@ -352,31 +352,77 @@
 (function() {
     'use strict';
 
+    angular.module('musApp')
+        .filter('withoutNull', function() {
+            return function(input) {
+                var result = [];
+                input.forEach(function(entry) {
+                    if(entry !== null) {
+                        result.push(entry);
+                    }
+                });
+                return result;
+            };
+        });
+})();
+
+(function() {
+    'use strict';
+
     angular.module('musApp').directive('avatar', function() {
         return {
             restrict: 'E',
             replace: true,
             templateUrl: 'src/views/templates/avatar.html',
             scope: {
-                playerName: '=',
+                playerName: '@',
                 players: '=',
                 mainPlayer: '='
             },
-            controller: ['$scope', function ($scope) {
-                $scope.getPlayerIndexClass = function() {
-                    if(typeof $scope.players === 'undefined' || $scope.playerName === null || $scope.playerName === '') {
-                        return 'avatar__player--null';
-                    }
-                    return 'avatar__player--' + $scope.players.indexOf($scope.playerName);
-                };
+            //controller: ['$scope', function ($scope) {
+            //
+            //
+            //
+            //    $scope.getPlayerIndexClass = function() {
+            //
+            //        console.log($scope.playerName);
+            //        console.log($scope.players);
+            //        console.log($scope.mainPlayer);
+            //
+            //        if(typeof $scope.players === 'undefined' || $scope.playerName === null || $scope.playerName === '') {
+            //            return 'avatar__player--null';
+            //        }
+            //        return 'avatar__player--' + $scope.players.indexOf($scope.playerName);
+            //    };
+            //
+            //    $scope.getPlayerName = function() {
+            //        if($scope.mainPlayer) {
+            //            return 'Yo';
+            //        }
+            //        return $scope.playerName;
+            //    };
+            //}]
+            link: function(scope, element) {
 
-                $scope.getPlayerName = function() {
-                    if($scope.mainPlayer) {
-                        return 'Yo';
+                scope.$watch('players', function(value) {
+                    var avatarClass = 'avatar__player--null';
+                    console.log('scope.players');
+                    console.log(value);
+                    console.log('scope.playerName');
+                    console.log(scope.playerName);
+                    if(typeof value !== 'undefined' && scope.playerName !== null && scope.playerName !== '') {
+                        avatarClass = 'avatar__player--' + value.indexOf(scope.playerName);
                     }
-                    return $scope.playerName;
-                };
-            }]
+                    element.removeClass('avatar__player--null');
+                    element.removeClass('avatar__player--0');
+                    element.removeClass('avatar__player--1');
+                    element.removeClass('avatar__player--2');
+                    element.removeClass('avatar__player--3');
+                    element.addClass(avatarClass);
+                    element.find('strong').text(scope.playerName);
+
+                });
+            }
         };
     });
 })();
@@ -432,6 +478,32 @@
                 };
 
             }]
+            //link: function(scope, element) {
+            //
+            //    var getPlayer = function(index) {
+            //        return playerLocatorService.locatePlayer(scope.room, scope.playerName, index);
+            //    };
+            //
+            //    scope.$watch(
+            //        function() {
+            //            if(typeof scope.room.game !== 'undefined') {
+            //                return scope.room.game.players.filter(function (player) {
+            //                    return player !== null;
+            //                }).length;
+            //            }
+            //            return 0;
+            //        },
+            //        function() {
+            //            console.log('Cambio en la mesa');
+            //            console.log(angular.element(element)[0].querySelector('#player0'));
+            //            angular.element(element)[0].querySelector('#player0').setAttribute('data-player-name', getPlayer(0));
+            //            angular.element(element)[0].querySelector('#player1').setAttribute('data-player-name', getPlayer(1));
+            //            angular.element(element)[0].querySelector('#player2').setAttribute('data-player-name', getPlayer(2));
+            //            angular.element(element)[0].querySelector('#player3').setAttribute('data-player-name', getPlayer(3));
+            //        });
+            //
+            //
+            //}
         };
     });
 })();
@@ -448,6 +520,32 @@
             },
             templateUrl: 'src/views/templates/game-table.html',
             controller: 'gameTableCtrl'
+            //link: function(scope, element) {
+            //
+            //    var getPlayer = function(index) {
+            //        return playerLocatorService.locatePlayer(scope.room, scope.playerName, index);
+            //    };
+            //
+            //    scope.$watch(
+            //        function() {
+            //            if(typeof scope.room.game !== 'undefined') {
+            //                return scope.room.game.players.filter(function (player) {
+            //                    return player !== null;
+            //                }).length;
+            //            }
+            //            return 0;
+            //        },
+            //        function() {
+            //            console.log('Cambio en la mesa');
+            //            angular.element(element)[0].querySelector('#player1').setAttribute('data-player-name', getPlayer(1));
+            //            angular.element(element)[0].querySelector('#player2').setAttribute('data-player-name', getPlayer(2));
+            //            angular.element(element)[0].querySelector('#player3').setAttribute('data-player-name', getPlayer(3));
+            //        });
+            //
+            //
+            //
+            //
+            //}
         };
     });
 })();
@@ -491,21 +589,20 @@
     });
 
 })();
-(function() {
+(function () {
     'use strict';
-
-    angular.module('musApp')
-        .filter('withoutNull', function() {
-            return function(input) {
-                var result = [];
-                input.forEach(function(entry) {
-                    if(entry !== null) {
-                        result.push(entry);
-                    }
-                });
-                return result;
-            };
-        });
+    angular.module('musApp').config(['$routeProvider', function ($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'src/views/main.html',
+                controller: 'mainCtrl'
+            })
+            .when('/room/:roomId', {
+                templateUrl: 'src/views/room.html',
+                controller: 'roomCtrl'
+            })
+            .otherwise({redirectTo: '/'});
+    }]);
 })();
 
 (function() {
@@ -554,22 +651,6 @@
             };
         });
 
-})();
-
-(function () {
-    'use strict';
-    angular.module('musApp').config(['$routeProvider', function ($routeProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'src/views/main.html',
-                controller: 'mainCtrl'
-            })
-            .when('/room/:roomId', {
-                templateUrl: 'src/views/room.html',
-                controller: 'roomCtrl'
-            })
-            .otherwise({redirectTo: '/'});
-    }]);
 })();
 
 (function() {

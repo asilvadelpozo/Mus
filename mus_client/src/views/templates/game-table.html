@@ -2,10 +2,10 @@
     <div class="game-table__row">
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <avatar data-player-name="getPlayer(3)" data-players="room.game.players" data-main-player="false"></avatar>
+                <!--<avatar id="player3" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
             </div>
         </div>
-        <div class="game-table__player game-table__player--horizontal">
+        <div id="player2-cards" class="game-table__player game-table__player--horizontal">
             <div class="card card--order15 card__animation--player2 card--b10"></div>
             <div class="card card--order11 card__animation--player2 card--o10"></div>
             <div class="card card--order7 card__animation--player2 card--c10"></div>
@@ -13,12 +13,12 @@
         </div>
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <avatar data-player-name="getPlayer(2)" data-players="room.game.players" data-main-player="false"></avatar>
+                <!--<avatar id="player2" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
             </div>
         </div>
     </div>
     <div class="game-table__row">
-        <div class="game-table__player game-table__player--vertical">
+        <div id="player3-cards" class="game-table__player game-table__player--vertical">
             <div class="card card--order4 card__animation--player3 card--b10"></div>
             <div class="card card--order8 card__animation--player3 card--o10"></div>
             <div class="card card--order12 card__animation--player3 card--c10"></div>
@@ -27,7 +27,7 @@
         <div class="game-table__actions">
             <game-actions data-player-name="playerName" data-room="room"></game-actions>
         </div>
-        <div class="game-table__player game-table__player--vertical game-table__player--vertical--mirror">
+        <div id="player1-cards" class="game-table__player game-table__player--vertical game-table__player--vertical--mirror">
             <div class="card card--order14 card__animation--player1 card--b10"></div>
             <div class="card card--order10 card__animation--player1 card--o10"></div>
             <div class="card card--order6 card__animation--player1 card--c10"></div>
@@ -37,10 +37,10 @@
     <div class="game-table__row">
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <avatar data-player-name="playerName" data-players="room.game.players" data-main-player="true"></avatar>
+                <!--<avatar id="player0" data-player-name="playerName" data-players="room.game.players" data-main-player="true"></avatar>-->
             </div>
         </div>
-        <div class="game-table__player game-table__player--horizontal">
+        <div id="player0-cards" class="game-table__player game-table__player--horizontal">
             <div class="card card--order1 card__animation--player0 card--b10"></div>
             <div class="card card--order5 card__animation--player0 card--o10"></div>
             <div class="card card--order9 card__animation--player0 card--c10"></div>
@@ -48,8 +48,10 @@
         </div>
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <avatar data-player-name="getPlayer(1)" data-players="room.game.players" data-main-player="false"></avatar>
+                <!--<avatar id="player1" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
             </div>
         </div>
     </div>
 </div>
+
+

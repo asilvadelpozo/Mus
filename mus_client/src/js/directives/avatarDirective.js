@@ -8,7 +8,7 @@
             templateUrl: 'src/views/templates/avatar.html',
             scope: {
                 playerName: '@',
-                players: '=',
+                players: '='
             },
             link: function(scope, element) {
 

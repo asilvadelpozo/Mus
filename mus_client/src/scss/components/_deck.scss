@@ -46,29 +46,31 @@
     border: solid 2px white;
   }
 
+  $animation-delay: 0.32s;
+
   &__animation {
     &--player0 {
-      -webkit-animation: card-animation-p0 0.32s ease-in-out both;
-      animation: card-animation-p0 0.32s ease-in-out both;
+      -webkit-animation: card-animation-p0 $animation-delay ease-in-out both;
+      animation: card-animation-p0 $animation-delay ease-in-out both;
     }
     &--player1 {
-      -webkit-animation: card-animation-p1 0.32s ease-in both;
-      animation: card-animation-p1 0.32s ease-in both;
+      -webkit-animation: card-animation-p1 $animation-delay ease-in both;
+      animation: card-animation-p1 $animation-delay ease-in both;
     }
     &--player2 {
-      -webkit-animation: card-animation-p2 0.32s ease-in-out both;
-      animation: card-animation-p2 0.32s ease-in-out both;
+      -webkit-animation: card-animation-p2 $animation-delay ease-in-out both;
+      animation: card-animation-p2 $animation-delay ease-in-out both;
     }
     &--player3 {
-      -webkit-animation: card-animation-p3 0.32s ease-in both;
-      animation: card-animation-p3 0.32s ease-in both;
+      -webkit-animation: card-animation-p3 $animation-delay ease-in both;
+      animation: card-animation-p3 $animation-delay ease-in both;
     }
   }
 
   @for $i from 1 through 16 {
     &--order#{$i} {
-      -webkit-animation-delay: $i * 0.32s;
-      animation-delay: $i * 0.32s;
+      -webkit-animation-delay: $i * $animation-delay;
+      animation-delay: $i * $animation-delay;
     }
   }
 
@@ -96,7 +98,7 @@
   @-webkit-keyframes card-animation-p1 {
     0% {
       opacity: 1;
-      -webkit-transform: translate(-100px,0px) rotate(360deg);
+      -webkit-transform: translate(-100px,0px) rotate(270deg);
     }
     50% {
       opacity: 0.5;
@@ -147,7 +149,7 @@
   @-webkit-keyframes card-animation-p3 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(100px,0px) rotate(360deg);
+      -webkit-transform: translate(100px,0px) rotate(90deg);
     }
     50% {
       opacity: 0.5;

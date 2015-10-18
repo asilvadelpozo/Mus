@@ -51,12 +51,15 @@
 
         client.on('leave-room', function(data) {
             var playerName = musModel.getPlayers()[client.id].playerName,
-                roomId = data;
+                roomId = data,
+                room = musModel.getRoomsModel().getRoomById(roomId);
             musModel.deletePlayerFromRoom(client.id, roomId);
             client.leave(roomId);
             client.emit('leave-room-success');
-            client.broadcast.to(roomId).emit('player-left', JSON.stringify({room: new RoomDTO(musModel.getRoomsModel().getRoomById(roomId)), playerName: playerName}));
-            client.broadcast.to(roomId).emit('update-room', JSON.stringify(new RoomDTO(musModel.getRoomsModel().getRoomById(roomId))));
+            if(typeof musModel.getRoomsModel().getRoomById(roomId) !== 'undefined') {
+                client.broadcast.to(roomId).emit('player-left', JSON.stringify({room: new RoomDTO(room), playerName: playerName}));
+                client.broadcast.to(roomId).emit('update-room', JSON.stringify(new RoomDTO(room)));
+            }
             server.sockets.emit('update-mus', JSON.stringify(new MusDTO(musModel)));
         });
     }

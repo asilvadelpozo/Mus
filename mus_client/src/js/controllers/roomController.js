@@ -39,13 +39,17 @@
                         });
 
                         modalInstance.result.then(function (data) {
-                            $scope.playerName = data.playerName;
-                            musSocketService.emit('join-room', $scope.playerName, $scope.room.id);
+                            musSocketService.emit('join-room', data.playerName, $scope.room.id);
                         }, function () {
                             $location.url('/');
                         });
                     }
                 }
+            });
+
+            $scope.$on('socket:room-join-success', function(event, data) {
+                var playerName = JSON.parse(data).playerName;
+                $scope.playerName = playerName;
             });
 
             $scope.$on('socket:room-info-failure', function() {

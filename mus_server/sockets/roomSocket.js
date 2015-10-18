@@ -26,11 +26,10 @@
             if(musModel.addPlayerToRoom(client.id, playerName, roomId)) {
                 var room = musModel.getRoomsModel().getRoomById(roomId);
                 client.join(roomId);
-                client.emit('room-join-success', JSON.stringify({room: new RoomDTO(room), playerName: playerName}));
                 client.broadcast.to(roomId).emit('new-player-joined', JSON.stringify({room: new RoomDTO(room), playerName: playerName}));
                 server.to(roomId).emit('update-room', JSON.stringify(new RoomDTO(room)));
                 server.sockets.emit('update-mus', JSON.stringify(new MusDTO(musModel)));
-
+                client.emit('room-join-success', JSON.stringify({room: new RoomDTO(room), playerName: playerName}));
                 if(room.isFull()) {
                     server.to(roomId).emit('game-started');
                     gameLogicService.initializeGame(room.getGame());

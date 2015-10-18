@@ -2,7 +2,7 @@
     <div class="game-table__row">
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <!--<avatar id="player3" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
+                <avatar data-player-name="{{getPlayer(3)}}" data-players="room.game.players"></avatar>
             </div>
         </div>
         <div id="player2-cards" class="game-table__player game-table__player--horizontal">
@@ -13,7 +13,7 @@
         </div>
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <!--<avatar id="player2" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
+                <avatar data-player-name="{{getPlayer(2)}}" data-players="room.game.players"></avatar>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
     <div class="game-table__row">
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <!--<avatar id="player0" data-player-name="playerName" data-players="room.game.players" data-main-player="true"></avatar>-->
+                <avatar data-player-name="{{playerName}}" data-players="room.game.players"></avatar>
             </div>
         </div>
         <div id="player0-cards" class="game-table__player game-table__player--horizontal">
@@ -48,7 +48,7 @@
         </div>
         <div class="game-table__avatar">
             <div class="visible-xs visible-sm">
-                <!--<avatar id="player1" data-player-name="null" data-players="room.game.players" data-main-player="false"></avatar>-->
+                <avatar data-player-name="{{getPlayer(1)}}" data-players="room.game.players"></avatar>
             </div>
         </div>
     </div>

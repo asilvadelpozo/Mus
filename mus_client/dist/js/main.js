@@ -274,13 +274,17 @@
                         });
 
                         modalInstance.result.then(function (data) {
-                            $scope.playerName = data.playerName;
-                            musSocketService.emit('join-room', $scope.playerName, $scope.room.id);
+                            musSocketService.emit('join-room', data.playerName, $scope.room.id);
                         }, function () {
                             $location.url('/');
                         });
                     }
                 }
+            });
+
+            $scope.$on('socket:room-join-success', function(event, data) {
+                var playerName = JSON.parse(data).playerName;
+                $scope.playerName = playerName;
             });
 
             $scope.$on('socket:room-info-failure', function() {
@@ -352,23 +356,6 @@
 (function() {
     'use strict';
 
-    angular.module('musApp')
-        .filter('withoutNull', function() {
-            return function(input) {
-                var result = [];
-                input.forEach(function(entry) {
-                    if(entry !== null) {
-                        result.push(entry);
-                    }
-                });
-                return result;
-            };
-        });
-})();
-
-(function() {
-    'use strict';
-
     angular.module('musApp').directive('avatar', function() {
         return {
             restrict: 'E',
@@ -377,48 +364,23 @@
             scope: {
                 playerName: '@',
                 players: '=',
-                mainPlayer: '='
             },
-            //controller: ['$scope', function ($scope) {
-            //
-            //
-            //
-            //    $scope.getPlayerIndexClass = function() {
-            //
-            //        console.log($scope.playerName);
-            //        console.log($scope.players);
-            //        console.log($scope.mainPlayer);
-            //
-            //        if(typeof $scope.players === 'undefined' || $scope.playerName === null || $scope.playerName === '') {
-            //            return 'avatar__player--null';
-            //        }
-            //        return 'avatar__player--' + $scope.players.indexOf($scope.playerName);
-            //    };
-            //
-            //    $scope.getPlayerName = function() {
-            //        if($scope.mainPlayer) {
-            //            return 'Yo';
-            //        }
-            //        return $scope.playerName;
-            //    };
-            //}]
             link: function(scope, element) {
 
-                scope.$watch('players', function(value) {
-                    var avatarClass = 'avatar__player--null';
-                    console.log('scope.players');
-                    console.log(value);
-                    console.log('scope.playerName');
-                    console.log(scope.playerName);
-                    if(typeof value !== 'undefined' && scope.playerName !== null && scope.playerName !== '') {
-                        avatarClass = 'avatar__player--' + value.indexOf(scope.playerName);
+                scope.$watch('playerName', function(value) {
+                    var newAvatarClass = '';
+                    element[0].classList.forEach(function(cls) {
+                        if (cls.indexOf('avatar__player--') === 0) {
+                            element.removeClass(cls);
+                        }
+                    });
+                    if(typeof scope.players !== 'undefined' && value !== null && value !== '') {
+                        newAvatarClass = 'avatar__player--' + scope.players.indexOf(value);
                     }
-                    element.removeClass('avatar__player--null');
-                    element.removeClass('avatar__player--0');
-                    element.removeClass('avatar__player--1');
-                    element.removeClass('avatar__player--2');
-                    element.removeClass('avatar__player--3');
-                    element.addClass(avatarClass);
+                    else {
+                        newAvatarClass = 'avatar__player--null';
+                    }
+                    element.addClass(newAvatarClass);
                     element.find('strong').text(scope.playerName);
 
                 });
@@ -589,6 +551,23 @@
     });
 
 })();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .filter('withoutNull', function() {
+            return function(input) {
+                var result = [];
+                input.forEach(function(entry) {
+                    if(entry !== null) {
+                        result.push(entry);
+                    }
+                });
+                return result;
+            };
+        });
+})();
+
 (function () {
     'use strict';
     angular.module('musApp').config(['$routeProvider', function ($routeProvider) {

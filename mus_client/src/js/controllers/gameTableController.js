@@ -2,23 +2,10 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
+        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', 'cardTranslatorService', function($scope, playerLocatorService, cardTranslatorService) {
 
             $scope.getPlayer = function(index) {
                 return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
-            };
-
-            $scope.getCardType = function(typeInt) {
-                switch (typeInt) {
-                    case 0:
-                        return 'o';
-                    case 1:
-                        return 'c';
-                    case 2:
-                        return 'e';
-                    case 3:
-                        return 'b';
-                }
             };
 
             $scope.getCardsClassesForPlayer = function(index) {
@@ -30,22 +17,7 @@
                         realTargetPlayerIndex = (indexOfMainPlayer + index) % $scope.room.game.maxPlayers;
                     if(realTargetPlayerIndex !== -1) {
                         $scope.room.game.cards[realTargetPlayerIndex].map(function (card, index) {
-                            if (card === -1) {
-                                cardClasses[index] = 'card--empty';
-                            } else {
-                                if (card === 0) {
-                                    cardClasses[index] ='card--reverse';
-                                } else {
-                                    var number = card % 10,
-                                        type = Math.floor(card / 10);
-                                    if (number === 0) {
-                                        number = 10;
-                                        type = type - 1;
-                                    }
-                                    cardClasses[index] ='card--' + $scope.getCardType(type) + number;
-                                }
-                            }
-
+                            cardClasses[index] ='card--' + cardTranslatorService.translateCard(card);
                         });
                     }
                 }

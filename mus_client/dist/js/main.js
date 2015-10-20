@@ -64,34 +64,33 @@
     angular.module('musApp')
         .controller('gameActionsCtrl', ['$scope', 'musSocketService', function($scope, musSocketService) {
 
-            $scope.currentStatus = 'waiting';
-
             console.log(musSocketService);
 
+
             $scope.$on('socket:game-started', function() {
-                $scope.currentStatus = 'game-started';
+                $scope.game.currentStatus = 'game-started';
             });
 
             $scope.$on('socket:update-room', function() {
                 if(!$scope.isRoomFull()) {
-                    $scope.currentStatus = 'waiting';
+                    $scope.game.currentStatus = 'waiting';
                 }
             });
 
             $scope.$on('socket:hand-started', function(event, data) {
                 var cards = JSON.parse(data);
-                $scope.room.game.players.forEach(function (player, index) {
+                $scope.game.players.forEach(function (player, index) {
                     if($scope.playerName === player) {
-                        $scope.room.game.cards[index] = cards;
+                        $scope.game.cards[index] = cards;
                     }
                     else {
-                        $scope.room.game.cards[index] = [0, 0, 0, 0];
+                        $scope.game.cards[index] = [0, 0, 0, 0];
                     }
                 });
             });
 
             $scope.isRoomFull = function() {
-                return $scope.room.game.players.filter(function(player) { return player !== null; }).length === $scope.room.game.maxPlayers;
+                return $scope.game.players.filter(function(player) { return player !== null; }).length === $scope.game.maxPlayers;
             };
 
         }]);
@@ -211,7 +210,11 @@
     angular.module('musApp')
         .controller('roomCtrl', ['$scope', '$location', '$routeParams', '$modal', 'musSocketService', function($scope, $location, $routeParams, $modal, musSocketService) {
             $scope.playerName = '';
-            $scope.room = {};
+            $scope.room = {
+                game: {
+                    currentStatus: 'waiting'
+                }
+            };
 
             musSocketService.emit('room-info', $routeParams.roomId);
 
@@ -306,7 +309,9 @@
             });
 
             $scope.updateRoom = function(room) {
+                var currentStatus = $scope.room.game.currentStatus;
                 $scope.room = room;
+                $scope.room.game.currentStatus = currentStatus;
             };
 
             $scope.isRoomFull = function() {
@@ -385,7 +390,7 @@
             replace: true,
             templateUrl: 'src/views/templates/game-actions.html',
             scope: {
-                room : '=',
+                game : '=',
                 playerName: '='
             },
             controller: 'gameActionsCtrl'

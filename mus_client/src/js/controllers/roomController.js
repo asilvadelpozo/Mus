@@ -4,7 +4,11 @@
     angular.module('musApp')
         .controller('roomCtrl', ['$scope', '$location', '$routeParams', '$modal', 'musSocketService', function($scope, $location, $routeParams, $modal, musSocketService) {
             $scope.playerName = '';
-            $scope.room = {};
+            $scope.room = {
+                game: {
+                    currentStatus: 'waiting'
+                }
+            };
 
             musSocketService.emit('room-info', $routeParams.roomId);
 
@@ -99,7 +103,9 @@
             });
 
             $scope.updateRoom = function(room) {
+                var currentStatus = $scope.room.game.currentStatus;
                 $scope.room = room;
+                $scope.room.game.currentStatus = currentStatus;
             };
 
             $scope.isRoomFull = function() {

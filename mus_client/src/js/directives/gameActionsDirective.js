@@ -7,7 +7,7 @@
             replace: true,
             templateUrl: 'src/views/templates/game-actions.html',
             scope: {
-                room : '=',
+                game : '=',
                 playerName: '='
             },
             controller: 'gameActionsCtrl'

@@ -2,6 +2,7 @@
   "undef": true,
   "unused": true,
   "strict": true,
+  "loopfunc": true,
   "globals": {
     "angular": false,
     "module": false,

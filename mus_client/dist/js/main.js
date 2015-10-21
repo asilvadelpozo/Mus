@@ -78,15 +78,19 @@
             });
 
             $scope.$on('socket:hand-started', function(event, data) {
-                var cards = JSON.parse(data);
+                var cards = JSON.parse(data),
+                    newCards = [[0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0]
+                    ];
+                $scope.game.currentStatus = 'hand-started';
                 $scope.game.players.forEach(function (player, index) {
                     if($scope.playerName === player) {
-                        $scope.game.cards[index] = cards;
-                    }
-                    else {
-                        $scope.game.cards[index] = [0, 0, 0, 0];
+                        newCards[index] = cards;
                     }
                 });
+                $scope.game.cards = newCards;
             });
 
             $scope.isRoomFull = function() {
@@ -100,27 +104,27 @@
     'use strict';
 
     angular.module('musApp')
-        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', 'cardTranslatorService', function($scope, playerLocatorService, cardTranslatorService) {
+        .controller('gameTableCtrl', ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
 
             $scope.getPlayer = function(index) {
-                return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
+                return playerLocatorService.locatePlayer($scope.room.game, $scope.playerName, index);
             };
 
-            $scope.getCardsClassesForPlayer = function(index) {
-                var cardClasses = ['card--empty', 'card--empty', 'card--empty', 'card--empty'];
-                if(typeof $scope.room !== 'undefined' &&
-                    typeof $scope.room.game !== 'undefined' &&
-                    $scope.playerName !== '') {
-                    var indexOfMainPlayer = $scope.room.game.players.indexOf($scope.playerName),
-                        realTargetPlayerIndex = (indexOfMainPlayer + index) % $scope.room.game.maxPlayers;
-                    if(realTargetPlayerIndex !== -1) {
-                        $scope.room.game.cards[realTargetPlayerIndex].map(function (card, index) {
-                            cardClasses[index] ='card--' + cardTranslatorService.translateCard(card);
-                        });
-                    }
-                }
-                return cardClasses;
-            };
+            //$scope.getCardsClassesForPlayer = function(index) {
+            //    var cardClasses = ['card--empty', 'card--empty', 'card--empty', 'card--empty'];
+            //    if(typeof $scope.room !== 'undefined' &&
+            //        typeof $scope.room.game !== 'undefined' &&
+            //        $scope.playerName !== '') {
+            //        var indexOfMainPlayer = $scope.room.game.players.indexOf($scope.playerName),
+            //            realTargetPlayerIndex = (indexOfMainPlayer + index) % $scope.room.game.maxPlayers;
+            //        if(realTargetPlayerIndex !== -1) {
+            //            $scope.room.game.cards[realTargetPlayerIndex].map(function (card, index) {
+            //                cardClasses[index] ='card--' + cardTranslatorService.translateCard(card);
+            //            });
+            //        }
+            //    }
+            //    return cardClasses;
+            //};
 
         }]);
 
@@ -413,7 +417,7 @@
             controller: ['$scope', 'playerLocatorService', function($scope, playerLocatorService) {
 
                 $scope.getPlayer = function(index) {
-                    return playerLocatorService.locatePlayer($scope.room, $scope.playerName, index);
+                    return playerLocatorService.locatePlayer($scope.room.game, $scope.playerName, index);
                 };
 
             }]
@@ -423,7 +427,7 @@
 (function() {
     'use strict';
 
-    angular.module('musApp').directive('gameTable', function() {
+    angular.module('musApp').directive('gameTable', ['cardDealingOrderService', 'playerLocatorService', 'cardTranslatorService', function(cardDealingOrderService, playerLocatorService, cardTranslatorService) {
         return {
             restrict: 'E',
             replace: true,
@@ -432,11 +436,57 @@
                 room: '='
             },
             templateUrl: 'src/views/templates/game-table.html',
-            controller: 'gameTableCtrl'
+            controller: 'gameTableCtrl',
+            link: function(scope, element) {
+
+                scope.$watch('room.game.cards', function(newCards, oldCards) {
+
+                    if(typeof newCards !== 'undefined' && typeof oldCards !== 'undefined' && typeof scope.playerName !== 'undefined' && scope.playerName !== '') {
+                        console.log('newCards');
+                        console.log(newCards);
+                        console.log('oldCards');
+                        console.log(oldCards);
+                        var dealingOrder = cardDealingOrderService.getDealingOrder(oldCards, newCards, scope.room.game, scope.playerName);
+
+                        console.log('dealingOrder');
+                        console.log(dealingOrder);
+
+                        console.log('room');
+                        console.log(scope.room);
+                        console.log('game');
+                        console.log(scope.room);
+                        console.log('players');
+                        console.log(scope.room.game.players);
+                        console.log('playerName');
+                        console.log(scope.playerName);
+
+
+
+                        for (var i = 0; i < 4; i++) {
+                            var player = playerLocatorService.locatePlayer(scope.room.game, scope.playerName, i);
+                            console.log(player);
+                            var realIndexOfPlayer = scope.room.game.players.indexOf(player);
+                            var dealingOrderForPlayer = dealingOrder[realIndexOfPlayer];
+                            var playerCardsElement = element[0].querySelector('#player' + i + '-cards').children;
+                            console.log('playerCardsElement');
+                            console.log(playerCardsElement);
+                            dealingOrderForPlayer.forEach(function (cardOrder, cardIndex) {
+                                if (cardOrder !== 0) {
+                                    playerCardsElement[cardIndex].classList.remove('card--empty');
+                                    playerCardsElement[cardIndex].classList.add('card__animation--player' + i);
+                                    playerCardsElement[cardIndex].classList.add('card--order' + cardOrder);
+                                    playerCardsElement[cardIndex].classList.add('card--' + cardTranslatorService.translateCard(scope.room.game.cards[realIndexOfPlayer][cardIndex]));
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
             //link: function(scope, element) {
             //
             //    var getPlayer = function(index) {
-            //        return playerLocatorService.locatePlayer(scope.room, scope.playerName, index);
+            //        return playerLocatorService.locatePlayer(scope.room.game, scope.playerName, index);
             //    };
             //
             //    scope.$watch(
@@ -460,7 +510,7 @@
             //
             //}
         };
-    });
+    }]);
 })();
 (function() {
     'use strict';
@@ -539,6 +589,78 @@
     'use strict';
 
     angular.module('musApp')
+        .factory('cardDealingOrderService', ['playerLocatorService', function (playerLocatorService) {
+
+             function shiftArrayNPositionsOnDirection(array, positions, direction) {
+                 var i;
+                if(direction === 'right') {
+                    for(i = 0; i < positions; i++) {
+                        array.unshift(array.pop());
+                    }
+                }
+                if(direction === 'left') {
+                    for(i = 0; i < positions; i++) {
+                        array.push(array.shift());
+                    }
+                }
+            }
+
+            function reverseOrder(array, index) {
+                array[index].reverse();
+            }
+
+            function getDealingOrder(oldCards, newCards, game, mainPlayerName) {
+                var dealingOrder = [[0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0]],
+                    order = 1;
+
+                // First we shift both arrays 'hand' positions to the left
+                shiftArrayNPositionsOnDirection(oldCards, game.hand, 'left');
+                shiftArrayNPositionsOnDirection(newCards, game.hand, 'left');
+
+                if(game.currentStatus === 'hand-started') { // We have to deal alternatively
+                    for(var cardIndex = 0; cardIndex < 4; cardIndex++) {
+                        for(var playerIndex = 0; playerIndex < oldCards.length; playerIndex++) {
+                            dealingOrder[playerIndex][cardIndex] = order;
+                            order++;
+                        }
+                    }
+                } else { // We have to deal normally
+                    oldCards.forEach(function (playerCards, playerIndex) {
+                        playerCards.forEach(function (card, cardIndex) {
+                            if (newCards[playerIndex][cardIndex] !== card) { // The card did change
+                                dealingOrder[playerIndex][cardIndex] = order;
+                                order++;
+                            }
+                        });
+                    });
+                }
+
+                // Now we shift back to the right 'hand' positions all the arrays
+                shiftArrayNPositionsOnDirection(oldCards, game.hand, 'right');
+                shiftArrayNPositionsOnDirection(newCards, game.hand, 'right');
+                shiftArrayNPositionsOnDirection(dealingOrder, game.hand, 'right');
+
+                // Finally we inverse the order of players 1 and 2 for better visualization effect
+                reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 1)));
+                reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 2)));
+
+                return dealingOrder;
+            }
+
+            return {
+                getDealingOrder: getDealingOrder
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
         .factory('cardTranslatorService', function () {
             function getCardType(typeInt) {
                 switch (typeInt) {
@@ -609,11 +731,11 @@
 
     angular.module('musApp')
         .factory('playerLocatorService', function () {
-            function locatePlayer(room, mainPlayerName, targetPlayerIndex) {
-                if (typeof room.game !== 'undefined' && typeof room.game.players !== 'undefined') {
-                    var indexOfMainPlayer = room.game.players.indexOf(mainPlayerName),
-                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % room.game.maxPlayers;
-                    return room.game.players[realTargetPlayerIndex];
+            function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
+                if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
+                    var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
+                    return game.players[realTargetPlayerIndex];
                 }
                 return null;
             }

@@ -5,6 +5,9 @@
   max-width: 100%;
   background-size: 100%;
   border-radius: 0.5em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 
   $percentage: 1/9;
 
@@ -46,7 +49,7 @@
     border: solid 2px white;
   }
 
-  $animation-delay: 0.32s;
+  $animation-delay: 0.20s;
 
   &__animation {
     &--player0 {

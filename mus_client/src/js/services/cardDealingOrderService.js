@@ -19,7 +19,14 @@
             }
 
             function reverseOrder(array, index) {
-                array[index].reverse();
+                var biggerThan0Reversed = array[index].filter(function(item) {
+                    return item > 0;
+                }).reverse();
+                array[index].forEach(function(elem, elemIndex) {
+                    if(elem > 0) {
+                        array[index][elemIndex] = biggerThan0Reversed.shift();
+                    }
+                });
             }
 
             function getDealingOrder(oldCards, newCards, game, mainPlayerName) {
@@ -56,7 +63,7 @@
                 shiftArrayNPositionsOnDirection(newCards, game.hand, 'right');
                 shiftArrayNPositionsOnDirection(dealingOrder, game.hand, 'right');
 
-                // Finally we inverse the order of players 1 and 2 for better visualization effect
+                // Finally we reverse the order of players 1 and 2 for better visualization effect
                 reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 1)));
                 reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 2)));
 

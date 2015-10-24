@@ -71,7 +71,7 @@
   }
 
   @for $i from 1 through 16 {
-    &--order#{$i} {
+    &__order#{$i} {
       -webkit-animation-delay: $i * $animation-delay;
       animation-delay: $i * $animation-delay;
     }

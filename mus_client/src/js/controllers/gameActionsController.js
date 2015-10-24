@@ -11,10 +11,8 @@
                 $scope.game.currentStatus = 'game-started';
             });
 
-            $scope.$on('socket:update-room', function() {
-                if(!$scope.isRoomFull()) {
-                    $scope.game.currentStatus = 'waiting';
-                }
+            $scope.$on('socket:player-left', function() {
+                $scope.game.currentStatus = 'waiting';
             });
 
             $scope.$on('socket:hand-started', function(event, data) {

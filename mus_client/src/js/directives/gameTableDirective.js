@@ -21,11 +21,12 @@
 
                 function removeOldClassesFromCard(playerCardsElements, cardIndex) {
                     var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
-                    playerCardsElements[cardIndex].classList.forEach(function (cardClass) {
+                    for(var i = 0; i < playerCardsElements[cardIndex].classList.length; i++) {
+                        var cardClass = playerCardsElements[cardIndex].classList[i];
                         if (cardClass.indexOf('card--') === 0 || cardClass.indexOf('card__') === 0) {
                             classesToRemove.push(cardClass);
                         }
-                    });
+                    }
                     classesToRemove.forEach(function (cardClass) {
                         playerCardsElements[cardIndex].classList.remove(cardClass);
                     });

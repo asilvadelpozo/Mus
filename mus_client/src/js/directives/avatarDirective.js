@@ -14,11 +14,12 @@
 
                 scope.$watch('playerName', function(value) {
                     var newAvatarClass = '';
-                    element[0].classList.forEach(function(cls) {
+                    for(var i = 0; i < element[0].classList.length; i++) {
+                        var cls = element[0].classList[i];
                         if (cls.indexOf('avatar__player--') === 0) {
                             element.removeClass(cls);
                         }
-                    });
+                    }
                     if(typeof scope.players !== 'undefined' && value !== null && value !== '') {
                         newAvatarClass = 'avatar__player--' + scope.players.indexOf(value);
                     }

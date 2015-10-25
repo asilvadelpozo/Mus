@@ -52,21 +52,14 @@
   $animation-delay: 0.20s;
 
   &__animation {
-    &--player0 {
-      -webkit-animation: card-animation-p0 $animation-delay ease-in-out both;
-      animation: card-animation-p0 $animation-delay ease-in-out both;
-    }
-    &--player1 {
-      -webkit-animation: card-animation-p1 $animation-delay ease-in both;
-      animation: card-animation-p1 $animation-delay ease-in both;
-    }
-    &--player2 {
-      -webkit-animation: card-animation-p2 $animation-delay ease-in-out both;
-      animation: card-animation-p2 $animation-delay ease-in-out both;
-    }
-    &--player3 {
-      -webkit-animation: card-animation-p3 $animation-delay ease-in both;
-      animation: card-animation-p3 $animation-delay ease-in both;
+
+    &--in {
+      @for $i from 0 through 3 {
+        &--player#{$i} {
+          -webkit-animation: card-animation-in-p#{$i} $animation-delay linear both;
+          animation: card-animation-in-p#{$i} $animation-delay linear both;
+        }
+      }
     }
   }
 
@@ -77,7 +70,7 @@
     }
   }
 
-  @-webkit-keyframes card-animation-p0 {
+  @-webkit-keyframes card-animation-in-p0 {
     0% {
       opacity: 0;
       -webkit-transform: translate(0px,-100px) rotate(360deg);
@@ -87,7 +80,7 @@
     }
   }
 
-  @keyframes card-animation-p0 {
+  @keyframes card-animation-in-p0 {
     0% {
       opacity: 0;
       -webkit-transform: translate(0px,-100px) rotate(360deg);
@@ -98,7 +91,7 @@
     }
   }
 
-  @-webkit-keyframes card-animation-p1 {
+  @-webkit-keyframes card-animation-in-p1 {
     0% {
       opacity: 1;
       -webkit-transform: translate(-100px,0px) rotate(270deg);
@@ -112,7 +105,7 @@
     }
   }
 
-  @keyframes card-animation-p1 {
+  @keyframes card-animation-in-p1 {
     0% {
       opacity: 0;
       -webkit-transform: translate(-100px,0px) rotate(270deg);
@@ -128,7 +121,7 @@
     }
   }
 
-  @-webkit-keyframes card-animation-p2 {
+  @-webkit-keyframes card-animation-in-p2 {
     0% {
       opacity: 0;
       -webkit-transform: translate(0px,100px) rotate(360deg);
@@ -138,7 +131,7 @@
     }
   }
 
-  @keyframes card-animation-p2 {
+  @keyframes card-animation-in-p2 {
     0% {
       opacity: 0;
       -webkit-transform: translate(0px,100px) rotate(360deg);
@@ -149,7 +142,7 @@
     }
   }
 
-  @-webkit-keyframes card-animation-p3 {
+  @-webkit-keyframes card-animation-in-p3 {
     0% {
       opacity: 0;
       -webkit-transform: translate(100px,0px) rotate(90deg);
@@ -163,7 +156,7 @@
     }
   }
 
-  @keyframes card-animation-p3 {
+  @keyframes card-animation-in-p3 {
     0% {
       opacity: 0;
       -webkit-transform: translate(100px,0px) rotate(90deg);

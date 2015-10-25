@@ -20,10 +20,14 @@
             link: function(scope, element) {
 
                 function removeOldClassesFromCard(playerCardsElements, cardIndex) {
+                    var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
                     playerCardsElements[cardIndex].classList.forEach(function (cardClass) {
-                        if (cardClass.indexOf('card--') === 0 || cardClass.indexOf('card__order') === 0 || cardClass.indexOf('card__animation--player') === 0) {
-                            playerCardsElements[cardIndex].classList.remove(cardClass);
+                        if (cardClass.indexOf('card--') === 0 || cardClass.indexOf('card__') === 0) {
+                            classesToRemove.push(cardClass);
                         }
+                    });
+                    classesToRemove.forEach(function (cardClass) {
+                        playerCardsElements[cardIndex].classList.remove(cardClass);
                     });
                 }
 
@@ -31,7 +35,10 @@
                     if (scope.room.game.currentStatus !== 'waiting') {
                         playerCardsElements[cardIndex].classList.add('card__order' + cardDealingOrder);
                     }
-                    playerCardsElements[cardIndex].classList.toggle('card__animation--player' + playerPositionOnTheTable, scope.room.game.currentStatus !== 'waiting');
+                    var animationType = (scope.room.game.cards[playerRealIndex][cardIndex] > -1) ? 'in' : 'out';
+                    if(scope.room.game.currentStatus !== 'waiting') {
+                        playerCardsElements[cardIndex].classList.add('card__animation--' + animationType + '--player' + playerPositionOnTheTable);
+                    }
                     playerCardsElements[cardIndex].classList.add('card--' + cardTranslatorService.translateCard(scope.room.game.cards[playerRealIndex][cardIndex]));
                 }
 

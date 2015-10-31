@@ -642,6 +642,27 @@
     'use strict';
 
     angular.module('musApp')
+        .factory('playerLocatorService', function () {
+            function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
+                if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
+                    var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
+                    return game.players[realTargetPlayerIndex];
+                }
+                return null;
+            }
+
+            return {
+                locatePlayer: locatePlayer
+            };
+        });
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
         .factory('cardManagerService', ['arrayShifterService', 'cardOrderService', 'cardTranslatorService', function (arrayShifterService, cardOrderService, cardTranslatorService) {
 
             function determineWhoChangedCards(oldCards, newCards) {
@@ -800,7 +821,7 @@
                     });
                 }
 
-                // Now we shift back to the right 'hand' positions all the arrays
+                // Now we shift back to the right 'relativeHand' positions all the arrays
                 arrayShifterService.shiftArrayNPositionsOnDirection(oldCards, relativeHand, 'right');
                 arrayShifterService.shiftArrayNPositionsOnDirection(newCards, relativeHand, 'right');
                 arrayShifterService.shiftArrayNPositionsOnDirection(dealingOrder, relativeHand, 'right');
@@ -904,27 +925,6 @@
 
             return {
                 getCardsTranslation: getCardsTranslation
-            };
-        });
-
-})();
-
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .factory('playerLocatorService', function () {
-            function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
-                if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
-                    var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
-                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
-                    return game.players[realTargetPlayerIndex];
-                }
-                return null;
-            }
-
-            return {
-                locatePlayer: locatePlayer
             };
         });
 

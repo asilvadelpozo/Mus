@@ -71,7 +71,7 @@
                     });
                 }
 
-                // Now we shift back to the right 'hand' positions all the arrays
+                // Now we shift back to the right 'relativeHand' positions all the arrays
                 arrayShifterService.shiftArrayNPositionsOnDirection(oldCards, relativeHand, 'right');
                 arrayShifterService.shiftArrayNPositionsOnDirection(newCards, relativeHand, 'right');
                 arrayShifterService.shiftArrayNPositionsOnDirection(dealingOrder, relativeHand, 'right');

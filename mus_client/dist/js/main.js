@@ -540,127 +540,6 @@
     'use strict';
 
     angular.module('musApp')
-        .factory('cardDealingOrderService', ['playerLocatorService', function (playerLocatorService) {
-
-             function shiftArrayNPositionsOnDirection(array, positions, direction) {
-                 var i;
-                if(direction === 'right') {
-                    for(i = 0; i < positions; i++) {
-                        array.unshift(array.pop());
-                    }
-                }
-                if(direction === 'left') {
-                    for(i = 0; i < positions; i++) {
-                        array.push(array.shift());
-                    }
-                }
-            }
-
-            function reverseOrder(array, index) {
-                var biggerThan0Reversed = array[index].filter(function(item) {
-                    return item > 0;
-                }).reverse();
-                array[index].forEach(function(elem, elemIndex) {
-                    if(elem > 0) {
-                        array[index][elemIndex] = biggerThan0Reversed.shift();
-                    }
-                });
-            }
-
-            function getDealingOrder(oldCards, newCards, game, mainPlayerName) {
-                var dealingOrder = [[0, 0, 0, 0],
-                                    [0, 0, 0, 0],
-                                    [0, 0, 0, 0],
-                                    [0, 0, 0, 0]],
-                    order = 1;
-
-                // First we shift both arrays 'hand' positions to the left
-                shiftArrayNPositionsOnDirection(oldCards, game.hand, 'left');
-                shiftArrayNPositionsOnDirection(newCards, game.hand, 'left');
-
-                if(game.currentStatus === 'hand-started') { // We have to deal alternatively
-                    for(var cardIndex = 0; cardIndex < 4; cardIndex++) {
-                        for(var playerIndex = 0; playerIndex < oldCards.length; playerIndex++) {
-                            dealingOrder[playerIndex][cardIndex] = order;
-                            order++;
-                        }
-                    }
-                } else { // We have to deal normally
-                    oldCards.forEach(function (playerCards, playerIndex) {
-                        playerCards.forEach(function (card, cardIndex) {
-                            if (newCards[playerIndex][cardIndex] !== card) { // The card did change
-                                dealingOrder[playerIndex][cardIndex] = order;
-                                order++;
-                            }
-                        });
-                    });
-                }
-
-                // Now we shift back to the right 'hand' positions all the arrays
-                shiftArrayNPositionsOnDirection(oldCards, game.hand, 'right');
-                shiftArrayNPositionsOnDirection(newCards, game.hand, 'right');
-                shiftArrayNPositionsOnDirection(dealingOrder, game.hand, 'right');
-
-                // Finally we reverse the order of players 1 and 2 for better visualization effect
-                reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 1)));
-                reverseOrder(dealingOrder, game.players.indexOf(playerLocatorService.locatePlayer(game, mainPlayerName, 2)));
-
-                return dealingOrder;
-            }
-
-            return {
-                getDealingOrder: getDealingOrder
-            };
-        }]);
-
-})();
-
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .factory('cardTranslatorService', function () {
-            function getCardType(typeInt) {
-                switch (typeInt) {
-                    case 0:
-                        return 'o';
-                    case 1:
-                        return 'c';
-                    case 2:
-                        return 'e';
-                    case 3:
-                        return 'b';
-                }
-            }
-
-            function translateCard(card) {
-                switch(card) {
-                    case -1:
-                        return 'empty';
-                    case 0:
-                        return 'reverse';
-                    default:
-                        var number = card % 10,
-                            type = Math.floor(card / 10);
-                        if (number === 0) {
-                            number = 10;
-                            type = type - 1;
-                        }
-                        return getCardType(type) + number;
-                }
-            }
-
-            return {
-                translateCard: translateCard
-            };
-        });
-
-})();
-
-(function() {
-    'use strict';
-
-    angular.module('musApp')
         .factory('musSocketService', function (socketFactory) {
             var socket = socketFactory();
             socket.forward('update-mus');
@@ -682,27 +561,6 @@
 
             return socket;
         });
-})();
-
-(function() {
-    'use strict';
-
-    angular.module('musApp')
-        .factory('playerLocatorService', function () {
-            function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
-                if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
-                    var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
-                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
-                    return game.players[realTargetPlayerIndex];
-                }
-                return null;
-            }
-
-            return {
-                locatePlayer: locatePlayer
-            };
-        });
-
 })();
 
 (function() {
@@ -779,4 +637,321 @@
                 $modalInstance.dismiss('cancel');
             };
         }]);
+})();
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('cardManagerService', ['arrayShifterService', 'cardOrderService', 'cardTranslatorService', function (arrayShifterService, cardOrderService, cardTranslatorService) {
+
+            function determineWhoChangedCards(oldCards, newCards) {
+                var whoChanged = [];
+
+                oldCards.forEach(function(oldPlayerCards, index) {
+                    if(oldPlayerCards.sort().join(',') !== newCards[index].sort().join(',')) {
+                        whoChanged.push(index);
+                    }
+                });
+
+                return whoChanged;
+            }
+
+            function determineAction(howManyChanged) {
+                switch (howManyChanged) {
+                    case 4:
+                        return 'deal';
+                    case 1:
+                        return 'discard';
+                    case 3:
+                        return 'show';
+                }
+            }
+
+            function determineFlip(action, whoChangedCards) {
+                var cardFlip = [[false, false, false, false],
+                                [false, false, false, false],
+                                [false, false, false, false],
+                                [false, false, false, false]
+                               ];
+                switch (action) {
+                    case 'deal': // When dealing, only player 0 flip cards
+                        cardFlip[0] = [true, true, true, true];
+                        break;
+                    case 'discard': // When discarding, only if it was player 1 it must be flipped
+                        if(whoChangedCards[0] === 0) {
+                            cardFlip[0] = [true, true, true, true];
+                        }
+                        break;
+                    case 'show': // When showing, all players but 0 should flip
+                        cardFlip[1] = [true, true, true, true];
+                        cardFlip[2] = [true, true, true, true];
+                        cardFlip[3] = [true, true, true, true];
+                        break;
+                }
+                return cardFlip;
+            }
+
+            function manageCards(oldCards, newCards, game, mainPlayerName) {
+
+                var whoChangedCards,
+                    action,
+                    cardsOrder,
+                    cardsFlip,
+                    cardsTranslation,
+                    realPlayerIndex = game.players.indexOf(mainPlayerName),
+                    relativeOldCards = arrayShifterService.shiftArrayNPositionsOnDirection(oldCards, realPlayerIndex, 'left'),
+                    relativeNewCards = arrayShifterService.shiftArrayNPositionsOnDirection(newCards, realPlayerIndex, 'left');
+
+                whoChangedCards = determineWhoChangedCards(relativeOldCards, relativeNewCards);
+
+                action = determineAction(whoChangedCards.length);
+
+                cardsOrder = cardOrderService.getCardsOrder(relativeOldCards, relativeNewCards, game, mainPlayerName, action, whoChangedCards);
+
+                cardsFlip = determineFlip(action, whoChangedCards);
+
+                cardsTranslation = cardTranslatorService.getCardsTranslation(relativeNewCards);
+
+                return {
+                    'action': action,
+                    'cardsOrder': cardsOrder,
+                    'cardsFlip': cardsFlip,
+                    'cardsTranslation': cardsTranslation
+                };
+            }
+
+            return {
+                manageCards: manageCards
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('cardOrderService', ['arrayShifterService', function (arrayShifterService) {
+
+            function getRelativeHand(game, mainPlayerName) {
+                return (game.maxPlayers - game.players.indexOf(mainPlayerName) + game.hand) % game.maxPlayers;
+            }
+
+            function didAllCardsChange(oldCards, newCards) {
+                var playerIndex = 0,
+                    cardIndex = 0,
+                    allCardsChanged = true;
+
+                while(playerIndex < 4 && allCardsChanged) {
+                    var playerOldCards = oldCards[playerIndex],
+                        playerNewCards = newCards[playerIndex];
+                    cardIndex = 0;
+                    while(cardIndex < playerOldCards.length && allCardsChanged) {
+                        if(playerOldCards[cardIndex] !== playerNewCards[cardIndex]) {
+                            cardIndex++;
+                        }
+                        else {
+                            allCardsChanged = false;
+                        }
+                    }
+                    playerIndex++;
+                }
+                return allCardsChanged;
+            }
+
+            function reverseOrder(array, index) {
+                var biggerThan0Reversed = array[index].filter(function(item) {
+                    return item > 0;
+                }).reverse();
+                array[index].forEach(function(elem, elemIndex) {
+                    if(elem > 0) {
+                        array[index][elemIndex] = biggerThan0Reversed.shift();
+                    }
+                });
+            }
+
+            function getDealOrder(oldCards, newCards, game, mainPlayerName) {
+                var dealingOrder = [[0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0]],
+                    relativeHand = getRelativeHand(game, mainPlayerName),
+                    order = 1;
+
+                // First we shift both arrays 'relativeHand' positions to the left
+                arrayShifterService.shiftArrayNPositionsOnDirection(oldCards, relativeHand, 'left');
+                arrayShifterService.shiftArrayNPositionsOnDirection(newCards, relativeHand, 'left');
+
+                if(didAllCardsChange(oldCards, newCards)) { // We have to deal alternatively
+                    for(var cardIndex = 0; cardIndex < 4; cardIndex++) {
+                        for(var playerIndex = 0; playerIndex < oldCards.length; playerIndex++) {
+                            dealingOrder[playerIndex][cardIndex] = order;
+                            order++;
+                        }
+                    }
+                } else { // We have to deal normally
+                    oldCards.forEach(function (playerCards, playerIndex) {
+                        playerCards.forEach(function (card, cardIndex) {
+                            if (newCards[playerIndex][cardIndex] !== card) { // The card did change
+                                dealingOrder[playerIndex][cardIndex] = order;
+                                order++;
+                            }
+                        });
+                    });
+                }
+
+                // Now we shift back to the right 'hand' positions all the arrays
+                arrayShifterService.shiftArrayNPositionsOnDirection(oldCards, relativeHand, 'right');
+                arrayShifterService.shiftArrayNPositionsOnDirection(newCards, relativeHand, 'right');
+                arrayShifterService.shiftArrayNPositionsOnDirection(dealingOrder, relativeHand, 'right');
+
+                // Finally we reverse the order of players 1 and 2 for better visualization effect
+                reverseOrder(dealingOrder, 1);
+                reverseOrder(dealingOrder, 2);
+
+                return dealingOrder;
+            }
+
+            function getDiscardOrder(oldCards, newCards, whoChangedCards) {
+                var discardOrder = [[0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0]],
+                    playerWhoDiscarded = whoChangedCards[0]; // When discarding 'whoChangeCards' should only contain 1 element
+
+                oldCards[playerWhoDiscarded].forEach(function (card, cardIndex) {
+                    if (newCards[playerWhoDiscarded][cardIndex] !== card) { // The card was discarded
+                        discardOrder[playerWhoDiscarded][cardIndex] = 1;
+                    }
+                });
+
+                return discardOrder;
+            }
+
+            function getShowOrder() { // The show order is always the same: all players except the main player have to show at the same time.
+                return [[0, 0, 0, 0],
+                        [1, 1, 1, 1],
+                        [1, 1, 1, 1],
+                        [1, 1, 1, 1]];
+            }
+
+            function getCardsOrder(oldCards, newCards, game, mainPlayerName, action, whoChangedCards) {
+                switch (action) {
+                    case 'deal':
+                        return getDealOrder(oldCards, newCards, game, mainPlayerName);
+                    case 'discard':
+                        return getDiscardOrder(oldCards, newCards, whoChangedCards);
+                    case 'show':
+                        return getShowOrder();
+                }
+            }
+
+            return {
+                getCardsOrder: getCardsOrder
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('cardTranslatorService', function () {
+
+            function getCardType(typeInt) {
+                switch (typeInt) {
+                    case 0:
+                        return 'o';
+                    case 1:
+                        return 'c';
+                    case 2:
+                        return 'e';
+                    case 3:
+                        return 'b';
+                }
+            }
+
+            function translateCard(card) {
+                switch(card) {
+                    case -1:
+                        return '';
+                    case 0:
+                        return 'reverse';
+                    default:
+                        var number = card % 10,
+                            type = Math.floor(card / 10);
+                        if (number === 0) {
+                            number = 10;
+                            type = type - 1;
+                        }
+                        return getCardType(type) + number;
+                }
+            }
+
+            function getCardsTranslation(cards) {
+                var translatedCards = [];
+
+                cards.forEach(function(playerCards, playerIndex) {
+                    translatedCards.push([]);
+                    playerCards.forEach(function(card) {
+                        translatedCards[playerIndex].push(translateCard(card));
+                    });
+                });
+
+                return translatedCards;
+            }
+
+            return {
+                getCardsTranslation: getCardsTranslation
+            };
+        });
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('playerLocatorService', function () {
+            function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
+                if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
+                    var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
+                    return game.players[realTargetPlayerIndex];
+                }
+                return null;
+            }
+
+            return {
+                locatePlayer: locatePlayer
+            };
+        });
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('musApp')
+        .factory('arrayShifterService', function () {
+            function shiftArrayNPositionsOnDirection(array, positions, direction) {
+                var i;
+                if(direction === 'right') {
+                    for(i = 0; i < positions; i++) {
+                        array.unshift(array.pop());
+                    }
+                }
+                if(direction === 'left') {
+                    for(i = 0; i < positions; i++) {
+                        array.push(array.shift());
+                    }
+                }
+            }
+
+            return {
+                shiftArrayNPositionsOnDirection: shiftArrayNPositionsOnDirection
+            };
+        });
+
 })();

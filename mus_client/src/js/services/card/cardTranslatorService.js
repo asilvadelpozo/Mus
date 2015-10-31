@@ -3,6 +3,7 @@
 
     angular.module('musApp')
         .factory('cardTranslatorService', function () {
+
             function getCardType(typeInt) {
                 switch (typeInt) {
                     case 0:
@@ -19,7 +20,7 @@
             function translateCard(card) {
                 switch(card) {
                     case -1:
-                        return 'empty';
+                        return '';
                     case 0:
                         return 'reverse';
                     default:
@@ -33,8 +34,21 @@
                 }
             }
 
+            function getCardsTranslation(cards) {
+                var translatedCards = [];
+
+                cards.forEach(function(playerCards, playerIndex) {
+                    translatedCards.push([]);
+                    playerCards.forEach(function(card) {
+                        translatedCards[playerIndex].push(translateCard(card));
+                    });
+                });
+
+                return translatedCards;
+            }
+
             return {
-                translateCard: translateCard
+                getCardsTranslation: getCardsTranslation
             };
         });
 

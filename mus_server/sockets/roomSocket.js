@@ -15,7 +15,7 @@
             var playerName = allPlayers[clientId].playerName,
                 playerCards = room.getGame().getCards()[room.getGame().getPlayers().indexOf(playerName)];
             setTimeout(function () {
-                server.sockets.connected[clientId].emit('hand-started', JSON.stringify(playerCards));
+                server.sockets.connected[clientId].emit('hand-started', JSON.stringify({hand: room.getGame().getHand(), playerCards: playerCards}));
             }, 2000);
         });
     }

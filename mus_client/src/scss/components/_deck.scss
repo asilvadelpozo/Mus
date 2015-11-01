@@ -99,7 +99,7 @@
   //  border: solid 2px white;
   //}
 
-  $animation-delay: 0.35s;
+  $animation-delay: 0.20s;
 
   &__animation {
 
@@ -123,11 +123,11 @@
   @-webkit-keyframes card-animation-in-p0 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,-200px) rotateZ(0deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(0deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(180deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(180deg);
     }
     100% {
       opacity: 1;
@@ -137,13 +137,13 @@
   @keyframes card-animation-in-p0 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,-200px) rotateZ(0deg);
-      transform: translate(0px,-200px) rotateZ(0deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(0deg);
+      transform: translate(0px,-100px) rotateZ(0deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(180deg);
-      transform: translate(0px,-100px) rotateZ(180deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(180deg);
+      transform: translate(0px,-50px) rotateZ(180deg);
     }
     100% {
       opacity: 1;
@@ -153,11 +153,11 @@
   @-webkit-keyframes card-animation-in-p1 {
     0% {
       opacity: 1;
-      -webkit-transform: translate(0px,-200px) rotateZ(270deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(90deg);
     }
     100% {
       opacity: 1;
@@ -167,13 +167,13 @@
   @keyframes card-animation-in-p1 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,-200px) rotateZ(270deg);
-      transform: translate(0px,-200px) rotateZ(270deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
+      transform: translate(0px,-100px) rotateZ(270deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
-      transform: translate(0px,-100px) rotateZ(90deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(90deg);
+      transform: translate(0px,-50px) rotateZ(90deg);
     }
     100% {
       opacity: 1;
@@ -183,11 +183,11 @@
   @-webkit-keyframes card-animation-in-p2 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,200px) rotateZ(360deg);
+      -webkit-transform: translate(0px,100px) rotateZ(360deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,100px) rotateZ(180deg);
+      -webkit-transform: translate(0px,50px) rotateZ(180deg);
     }
     100% {
       opacity: 1;
@@ -197,13 +197,13 @@
   @keyframes card-animation-in-p2 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,200px) rotateZ(0deg);
-      transform: translate(0px,200px) rotateZ(0deg);
+      -webkit-transform: translate(0px,100px) rotateZ(0deg);
+      transform: translate(0px,100px) rotateZ(0deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,100px) rotateZ(180deg);
-      transform: translate(0px,100px) rotateZ(180deg);
+      -webkit-transform: translate(0px,50px) rotateZ(180deg);
+      transform: translate(0px,50px) rotateZ(180deg);
     }
     100% {
       opacity: 1;
@@ -213,11 +213,11 @@
   @-webkit-keyframes card-animation-in-p3 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,-200px) rotateZ(90deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(270deg);
     }
     100% {
       opacity: 1;
@@ -227,13 +227,13 @@
   @keyframes card-animation-in-p3 {
     0% {
       opacity: 0;
-      -webkit-transform: translate(0px,-200px) rotateZ(90deg);
-      transform: translate(0px,-200px) rotateZ(90deg);
+      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
+      transform: translate(0px,-100px) rotateZ(90deg);
     }
     50% {
       opacity: 0.5;
-      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
-      transform: translate(0px,-100px) rotateZ(270deg);
+      -webkit-transform: translate(0px,-50px) rotateZ(270deg);
+      transform: translate(0px,-50px) rotateZ(270deg);
     }
     100% {
       opacity: 1;

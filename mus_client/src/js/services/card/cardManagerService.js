@@ -52,7 +52,6 @@
             }
 
             function manageCards(oldCards, newCards, game, mainPlayerName) {
-
                 var whoChangedCards,
                     action,
                     cardsOrder,

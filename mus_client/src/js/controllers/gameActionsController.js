@@ -16,12 +16,17 @@
             });
 
             $scope.$on('socket:hand-started', function(event, data) {
-                var cards = JSON.parse(data),
+                var info = JSON.parse(data),
+                    cards = info.playerCards,
+                    hand = info.hand,
                     newCards = [[0, 0, 0, 0],
                                 [0, 0, 0, 0],
                                 [0, 0, 0, 0],
                                 [0, 0, 0, 0]
                     ];
+
+                $scope.game.hand = hand;
+                console.log('newCards in controller', cards);
                 $scope.game.currentStatus = 'hand-started';
                 $scope.game.players.forEach(function (player, index) {
                     if($scope.playerName === player) {
@@ -29,6 +34,7 @@
                     }
                 });
                 $scope.game.cards = newCards;
+                console.log('newCards in controller 2', $scope.game.cards);
             });
 
             $scope.isRoomFull = function() {

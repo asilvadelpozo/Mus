@@ -4,17 +4,19 @@
     angular.module('musApp')
         .factory('arrayShifterService', function () {
             function shiftArrayNPositionsOnDirection(array, positions, direction) {
-                var i;
+                var result = array,
+                    i;
                 if(direction === 'right') {
                     for(i = 0; i < positions; i++) {
-                        array.unshift(array.pop());
+                        result.unshift(result.pop());
                     }
                 }
                 if(direction === 'left') {
                     for(i = 0; i < positions; i++) {
-                        array.push(array.shift());
+                        result.push(result.shift());
                     }
                 }
+                return result;
             }
 
             return {

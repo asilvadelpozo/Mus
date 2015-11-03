@@ -27,11 +27,11 @@
                     return scope.room.game.players.filter(function(player) { return player !== null; }).length === scope.room.game.maxPlayers;
                 }
 
-                function resetCardSide(cardSide) {
+                function resetCardSide(cardSide, cardTranslationIncluded) {
                     var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
                     for(var i = 0; i < cardSide.classList.length; i++) {
                         var cardClass = cardSide.classList[i];
-                        if (cardClass !== 'card--front' && cardClass !== 'card--back' && (cardClass.indexOf('card--') === 0 || cardClass.indexOf('card__') === 0)) {
+                        if (cardClass !== 'card--front' && cardClass !== 'card--back' && ((cardTranslationIncluded && cardClass.indexOf('card--') === 0) || cardClass.indexOf('card__') === 0)) {
                             classesToRemove.push(cardClass);
                         }
                     }
@@ -40,25 +40,12 @@
                     });
                 }
 
-                function removeAnimationAndOrderClasses(cardBack) {
-                    var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
-                    for(var i = 0; i < cardBack.classList.length; i++) {
-                        var cardClass = cardBack.classList[i];
-                        if (cardClass.indexOf('card__') === 0) {
-                            classesToRemove.push(cardClass);
-                        }
-                    }
-                    classesToRemove.forEach(function (cardClass) {
-                        cardBack.classList.remove(cardClass);
-                    });
-                }
-
                 function resetCard(cardElement) {
                     var cardFront = cardElement.querySelector('.card--front'),
                         cardBack = cardElement.querySelector('.card--back');
 
-                    resetCardSide(cardFront);
-                    resetCardSide(cardBack);
+                    resetCardSide(cardFront, true);
+                    resetCardSide(cardBack, true);
 
                     cardElement.classList.remove('card--flip');
                 }
@@ -82,7 +69,7 @@
                     cardBack.classList.add('card__animation--out--player' + playerIndex);
                     cardBack.classList.add('card__order' + cardOrder);
                     $timeout(function () {
-                        resetCardSide(cardBack);
+                        resetCardSide(cardBack, true);
                     }, (cardOrder * animationTime) + delay);
                 }
 
@@ -100,7 +87,7 @@
                             cardFront.classList.add('card--' + cardManagerInfo.cardsTranslation[playerIndex][cardIndex]);
                             cardContainer.classList.toggle('card--flip');
                         }
-                        removeAnimationAndOrderClasses(cardBack);
+                        resetCardSide(cardBack, false);
                     }, (cardOrder * animationTime) + delay);
                 }
 
@@ -115,7 +102,7 @@
 
                         // After the flip animation is done we remove the class card on the front and we trigger the discard animation
                         $timeout(function () {
-                            resetCardSide(cardFront);
+                            resetCardSide(cardFront, true);
                             triggerDiscardAnimation(cardBack, playerIndex, cardOrder);
 
                         }, (cardOrder * flipTime));

@@ -94,11 +94,6 @@
     background-size: 100%;
   }
 
-  //empty
-  //&--empty {
-  //  border: solid 2px white;
-  //}
-
   $animation-delay: 0.20s;
 
   &__animation {
@@ -111,6 +106,16 @@
         }
       }
     }
+
+    &--out {
+      @for $i from 0 through 3 {
+        &--player#{$i} {
+          -webkit-animation: card-animation-out-p#{$i} $animation-delay linear both;
+          animation: card-animation-out-p#{$i} $animation-delay linear both;
+        }
+      }
+    }
+
   }
 
   @for $i from 1 through 16 {
@@ -120,6 +125,7 @@
     }
   }
 
+  // Animation deal card (in)
   @-webkit-keyframes card-animation-in-p0 {
     0% {
       opacity: 0;
@@ -152,7 +158,7 @@
 
   @-webkit-keyframes card-animation-in-p1 {
     0% {
-      opacity: 1;
+      opacity: 0;
       -webkit-transform: translate(0px,-100px) rotateZ(270deg);
     }
     50% {
@@ -237,6 +243,127 @@
     }
     100% {
       opacity: 1;
+    }
+  }
+
+  // Animation discard card (out)
+  @-webkit-keyframes card-animation-out-p0 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(180deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(0deg);
+    }
+  }
+
+  @keyframes card-animation-out-p0 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(180deg);
+      transform: translate(0px,-50px) rotateZ(180deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(0deg);
+      transform: translate(0px,-100px) rotateZ(0deg);
+    }
+  }
+
+  @-webkit-keyframes card-animation-out-p1 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(90deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
+    }
+  }
+
+  @keyframes card-animation-out-p1 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(90deg);
+      transform: translate(0px,-50px) rotateZ(90deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(270deg);
+      transform: translate(0px,-100px) rotateZ(270deg);
+    }
+  }
+
+  @-webkit-keyframes card-animation-out-p2 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,50px) rotateZ(180deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,100px) rotateZ(360deg);
+    }
+  }
+
+  @keyframes card-animation-out-p2 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,50px) rotateZ(180deg);
+      transform: translate(0px,50px) rotateZ(180deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,100px) rotateZ(0deg);
+      transform: translate(0px,100px) rotateZ(0deg);
+    }
+  }
+
+  @-webkit-keyframes card-animation-out-p3 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(270deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
+    }
+  }
+
+  @keyframes card-animation-out-p3 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+      -webkit-transform: translate(0px,-50px) rotateZ(270deg);
+      transform: translate(0px,-50px) rotateZ(270deg);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translate(0px,-100px) rotateZ(90deg);
+      transform: translate(0px,-100px) rotateZ(90deg);
     }
   }
 

@@ -7,5 +7,10 @@
         <div class="game-action__panel" data-ng-switch-when="game-started">
             <div>¡Comienza la partida!</div>
         </div>
+        <div class="game-action__panel" data-ng-switch-when="hand-started">
+            <button data-ng-click="discard()">Discard</button>
+            <select data-ng-model="playerSelected" data-ng-options="player for player in players" data-ng-change="updateSelectedPlayer(playerSelected)"></select>
+            <button data-ng-click="show()">Show</button>
+        </div>
     </div>
 </div>

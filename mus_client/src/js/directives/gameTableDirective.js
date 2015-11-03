@@ -20,22 +20,36 @@
             link: function(scope, element) {
 
                 var animationTime = 200, // 0.20s is the time it take for the animation of dealing and discarding. It must be always the same as in _deck.scss
+                    flipTime = 600,// 0.6s is the time taken for a flip. It must be always the same as in _deck.scss (check flipper class).
                     delay = 500;
 
                 function isRoomFull() {
                     return scope.room.game.players.filter(function(player) { return player !== null; }).length === scope.room.game.maxPlayers;
                 }
 
-                function resetCardSide(card) {
+                function resetCardSide(cardSide) {
                     var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
-                    for(var i = 0; i < card.classList.length; i++) {
-                        var cardClass = card.classList[i];
+                    for(var i = 0; i < cardSide.classList.length; i++) {
+                        var cardClass = cardSide.classList[i];
                         if (cardClass !== 'card--front' && cardClass !== 'card--back' && (cardClass.indexOf('card--') === 0 || cardClass.indexOf('card__') === 0)) {
                             classesToRemove.push(cardClass);
                         }
                     }
                     classesToRemove.forEach(function (cardClass) {
-                        card.classList.remove(cardClass);
+                        cardSide.classList.remove(cardClass);
+                    });
+                }
+
+                function removeAnimationAndOrderClasses(cardBack) {
+                    var classesToRemove = []; // It is necessary to cache the classes. If not, working directly with classlist causes weird errors.
+                    for(var i = 0; i < cardBack.classList.length; i++) {
+                        var cardClass = cardBack.classList[i];
+                        if (cardClass.indexOf('card__') === 0) {
+                            classesToRemove.push(cardClass);
+                        }
+                    }
+                    classesToRemove.forEach(function (cardClass) {
+                        cardBack.classList.remove(cardClass);
                     });
                 }
 
@@ -58,23 +72,79 @@
                     }
                 }
 
-                function dealCard(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo) {
+                function triggerDealAnimation(cardBack, playerIndex, cardOrder) {
+                    cardBack.classList.add('card__animation--in--player' + playerIndex);
+                    cardBack.classList.add('card__order' + cardOrder);
+                    cardBack.classList.add('card--reverse');
+                }
+
+                function triggerDiscardAnimation(cardBack, playerIndex, cardOrder) {
+                    cardBack.classList.add('card__animation--out--player' + playerIndex);
+                    cardBack.classList.add('card__order' + cardOrder);
+                    $timeout(function () {
+                        resetCardSide(cardBack);
+                    }, (cardOrder * animationTime) + delay);
+                }
+
+                function deal(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo) {
                     var cardContainer = playerCardsElements[cardIndex],
                         cardFront = cardContainer.querySelector('.card--front'),
                         cardBack = cardContainer.querySelector('.card--back');
 
                     // Start reverse card animation: this happens for all the cards.
-                    cardBack.classList.add('card__animation--in--player' + playerIndex);
-                    cardBack.classList.add('card__order' + cardOrder);
-                    cardBack.classList.add('card--reverse');
+                    triggerDealAnimation(cardBack, playerIndex, cardOrder);
 
-                    // If the card has to be flipped: we have to wait until it is dealt and after manage card front and card container.
-                    if (cardManagerInfo.cardsFlip[playerIndex][cardIndex]) {
-                        $timeout(function () {
+                    // When the deal animation is finished we flip the card if needed and clean animation and order classes
+                    $timeout(function () {
+                        if (cardManagerInfo.cardsFlip[playerIndex][cardIndex]) {
                             cardFront.classList.add('card--' + cardManagerInfo.cardsTranslation[playerIndex][cardIndex]);
                             cardContainer.classList.toggle('card--flip');
-                        }, (cardOrder * animationTime) + delay);
+                        }
+                        removeAnimationAndOrderClasses(cardBack);
+                    }, (cardOrder * animationTime) + delay);
+                }
+
+                function discard(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo) {
+                    var cardContainer = playerCardsElements[cardIndex],
+                        cardFront = cardContainer.querySelector('.card--front'),
+                        cardBack = cardContainer.querySelector('.card--back');
+
+                    // Only if the card needs to be flipped
+                    if (cardManagerInfo.cardsFlip[playerIndex][cardIndex]) {
+                        cardContainer.classList.toggle('card--flip');
+
+                        // After the flip animation is done we remove the class card on the front and we trigger the discard animation
+                        $timeout(function () {
+                            resetCardSide(cardFront);
+                            triggerDiscardAnimation(cardBack, playerIndex, cardOrder);
+
+                        }, (cardOrder * flipTime));
+                    } else { // We just need to start the discard animation
+                        triggerDiscardAnimation(cardBack, playerIndex, cardOrder);
                     }
+                }
+
+                function show(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo) {
+                    var cardContainer = playerCardsElements[cardIndex],
+                        cardFront = cardContainer.querySelector('.card--front');
+
+                    // First we flip the card in case it has to be flipped
+                    if (cardManagerInfo.cardsFlip[playerIndex][cardIndex]) {
+                        cardFront.classList.add('card--' + cardManagerInfo.cardsTranslation[playerIndex][cardIndex]);
+                        cardContainer.classList.toggle('card--flip');
+                    }
+                }
+
+                function executeActionOnCards(cardManagerInfo, callback) {
+                    var dealingOrder = cardManagerInfo.cardsOrder;
+                    dealingOrder.forEach(function (playerDealingOrder, playerIndex) {
+                        var playerCardsElements = element[0].querySelector('#player' + playerIndex + '-cards').children;
+                        playerDealingOrder.forEach(function (cardOrder, cardIndex) {
+                            if (cardOrder > 0) { // The card did change
+                                callback(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo);
+                            }
+                        });
+                    });
                 }
 
                 scope.$watch('room.game.cards', function(newCards, oldCards) {
@@ -88,15 +158,13 @@
 
                             switch(cardManagerInfo.action) {
                                 case 'deal':
-                                    var dealingOrder = cardManagerInfo.cardsOrder;
-                                    dealingOrder.forEach(function(playerDealingOrder, playerIndex) {
-                                        var playerCardsElements = element[0].querySelector('#player' + playerIndex + '-cards').children;
-                                        playerDealingOrder.forEach(function(cardOrder, cardIndex) {
-                                            if(cardOrder > 0) {
-                                                dealCard(playerCardsElements, cardIndex, playerIndex, cardOrder, cardManagerInfo);
-                                            }
-                                        });
-                                    });
+                                    executeActionOnCards(cardManagerInfo, deal);
+                                    break;
+                                case 'discard':
+                                    executeActionOnCards(cardManagerInfo, discard);
+                                    break;
+                                case 'show':
+                                    executeActionOnCards(cardManagerInfo, show);
                                     break;
                             }
                         }

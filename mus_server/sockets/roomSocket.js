@@ -3,7 +3,7 @@
 
     function getAllRoomMembers(server, roomId) {
         var roomMembers = [];
-        for(var member in server.sockets.adapter.rooms[roomId]) {
+        for(var member in server.sockets.adapter.rooms[roomId].sockets) {
             roomMembers.push(member);
         }
         return roomMembers;

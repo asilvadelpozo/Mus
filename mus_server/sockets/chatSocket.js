@@ -9,5 +9,5 @@
                 server.to(roomId).emit('new-message', JSON.stringify({playerName: playerName, message: message}));
             }
         });
-    }
+    };
 })();

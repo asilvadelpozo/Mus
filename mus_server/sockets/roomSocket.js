@@ -62,6 +62,6 @@
             }
             server.sockets.emit('update-mus', JSON.stringify(new MusDTO(musModel)));
         });
-    }
+    };
 
 })();

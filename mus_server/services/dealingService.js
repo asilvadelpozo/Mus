@@ -12,13 +12,14 @@
     };
 
     DealingService.prototype.shiftArrayNPositionsOnDirection = function(array, positions, direction) {
+        var i;
         if(direction === 'right') {
-            for(var i = 0; i < positions; i++) {
+            for(i = 0; i < positions; i++) {
                 array.unshift(array.pop());
             }
         }
         if(direction === 'left') {
-            for(var i = 0; i < positions; i++) {
+            for(i = 0; i < positions; i++) {
                 array.push(array.shift());
             }
         }

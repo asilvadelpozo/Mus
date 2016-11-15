@@ -3,12 +3,13 @@ var DealingService= require('./../../services/dealingService'),
     GameModel = require('./../../model/game/gameModel');
 
 describe('Dealing Service', function() {
+    'use strict';
 
     var dealingService, mockRandomNumbersService, game;
 
     beforeEach(function() {
         mockRandomNumbersService = new RandomNumbersService();
-        mockRandomNumbersService.shuffle = jasmine.createSpy("shuffle").andCallFake(function() {
+        mockRandomNumbersService.shuffle = jasmine.createSpy('shuffle').andCallFake(function() {
             var result = [];
 
             for(var i = 17; i <= 40; i++) {

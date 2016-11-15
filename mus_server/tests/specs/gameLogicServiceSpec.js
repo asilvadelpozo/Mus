@@ -3,12 +3,13 @@ var GameLogicService= require('./../../services/gameLogicService'),
     GameModel = require('./../../model/game/gameModel');
 
 describe('Game Logic Service', function() {
+    'use strict';
 
     var gameLogicService, mockRandomNumbersService, game;
 
     beforeEach(function() {
         mockRandomNumbersService = new RandomNumbersService();
-        mockRandomNumbersService.getRandomNumbers = jasmine.createSpy("getRandomNumbers").andCallFake(function() {
+        mockRandomNumbersService.getRandomNumbers = jasmine.createSpy('getRandomNumbers').andCallFake(function() {
             switch(arguments[2]) {
                 case 40: // I am asking for deck
                     var result = [];

@@ -4,6 +4,7 @@ var RandomNumbersService = require('./../../services/randomNumbersService'),
 require('jasmine-expect');
 
 describe('Random Numbers Service', function() {
+    'use strict';
 
     describe('getRandomNumbers', function() {
 

@@ -12,6 +12,7 @@ gulp.task('scripts', getTask('scripts'));
 gulp.task('styles', getTask('styles'));
 gulp.task('images', getTask('images'));
 gulp.task('webserver', getTask('webserver'));
+gulp.task('test-server', getTask('jasmineNode'));
 
 gulp.task('watch', ['scripts', 'styles', 'images', 'webserver'], function () {
     gulp.watch('mus_client/src/js/**/*.js', ['scripts']);

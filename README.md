@@ -45,3 +45,10 @@ and browse to:
 ```
 http://localhost:3000/
 ```
+
+## Testing
+
+To run tests on the NodeJS server application:
+```
+gulp test-server
+```

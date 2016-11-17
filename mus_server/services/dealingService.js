@@ -44,7 +44,7 @@
                     var card = game.getDeck().splice(0, 1)[0];
                     playerCards.push(card);
                 }
-            });
+            }, this);
         }
         this.shiftArrayNPositionsOnDirection(cards, game.getHand(), 'right');
     };

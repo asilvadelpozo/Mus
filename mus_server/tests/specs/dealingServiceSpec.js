@@ -7,17 +7,17 @@ describe('Dealing Service', function() {
 
     var dealingService, mockRandomNumbersService, game;
 
-    function shuffleMock(resultNumbersArray) {
-        return function() {
+    function mockRandomNumberServiceShuffle(resultNumbersArray) {
+        mockRandomNumbersService = new RandomNumbersService();
+        mockRandomNumbersService.shuffle = jasmine.createSpy('shuffle').andCallFake(function() {
             return resultNumbersArray;
-        }
+        });
+        game = new GameModel();
+        dealingService = new DealingService(mockRandomNumbersService);
     }
 
     beforeEach(function() {
-        mockRandomNumbersService = new RandomNumbersService();
-        mockRandomNumbersService.shuffle = jasmine.createSpy('shuffle').andCallFake(shuffleMock([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]));
-        game = new GameModel();
-        dealingService = new DealingService(mockRandomNumbersService);
+        mockRandomNumberServiceShuffle([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
     });
 
     describe('shiftArrayNPositionsOnDirection', function() {
@@ -97,17 +97,11 @@ describe('Dealing Service', function() {
 
         });
 
-//TODO: test alternate with discarded
-        ddescribe('almost empty deck (discarded already)', function () {
-
-            beforeEach(function() {
-                mockRandomNumbersService = new RandomNumbersService();
-                mockRandomNumbersService.shuffle = jasmine.createSpy('shuffle').andCallFake(shuffleMock([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]));
-                game = new GameModel();
-                dealingService = new DealingService(mockRandomNumbersService);
-            });
+        describe('almost empty deck (discarded already)', function () {
 
             it('when remaining cards still on the deck, it should deal cards without alternate', function() {
+
+                mockRandomNumberServiceShuffle([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
                 game.cards = [[1, 2], [5, 6], [9, 10], [13, 14]];
                 game.setDiscarded([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
                 game.setDeck([37, 38, 39, 40]);
@@ -115,12 +109,30 @@ describe('Dealing Service', function() {
                 dealingService.dealCards(game, false);
 
                 expect(game.getDiscarded()).toBeEmptyArray();
-                expect(game.getDeck()).toEqual([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                expect(game.getDeck()).toEqual([11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
 
                 expect(game.getCards()[0]).toEqual([1, 2, 37, 38]);
                 expect(game.getCards()[1]).toEqual([5, 6, 39, 40]);
                 expect(game.getCards()[2]).toEqual([9, 10, 3, 4]);
                 expect(game.getCards()[3]).toEqual([13, 14, 7, 8]);
+            });
+
+            it('when the deck is already empty, it should deal cards without alternate', function() {
+
+                mockRandomNumberServiceShuffle([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                game.cards = [[1, 2], [5, 6], [9, 10], [13, 14]];
+                game.setDiscarded([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                game.setDeck([]);
+
+                dealingService.dealCards(game, false);
+
+                expect(game.getDiscarded()).toBeEmptyArray();
+                expect(game.getDeck()).toEqual([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+
+                expect(game.getCards()[0]).toEqual([1, 2, 3, 4]);
+                expect(game.getCards()[1]).toEqual([5, 6, 7, 8]);
+                expect(game.getCards()[2]).toEqual([9, 10, 11, 12]);
+                expect(game.getCards()[3]).toEqual([13, 14, 15, 16]);
             });
 
         });

@@ -100,39 +100,47 @@ describe('Dealing Service', function() {
         describe('almost empty deck (discarded already)', function () {
 
             it('when remaining cards still on the deck, it should deal cards without alternate', function() {
+                var discarded = [3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+                    discardedReverse = discarded.slice().reverse();
 
-                mockRandomNumberServiceShuffle([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
+                // We use slice for making a copy. It is necessary here to be able to use discardedReverse
+                // on the expectations below, and avoid it being mutated by the method.
+                mockRandomNumberServiceShuffle(discardedReverse.slice());
                 game.cards = [[1, 2], [5, 6], [9, 10], [13, 14]];
-                game.setDiscarded([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
+                game.setDiscarded(discarded);
                 game.setDeck([37, 38, 39, 40]);
 
                 dealingService.dealCards(game, false);
 
                 expect(game.getDiscarded()).toBeEmptyArray();
-                expect(game.getDeck()).toEqual([11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]);
+                expect(game.getDeck()).toEqual(discardedReverse.slice(4, discarded.length));
 
                 expect(game.getCards()[0]).toEqual([1, 2, 37, 38]);
                 expect(game.getCards()[1]).toEqual([5, 6, 39, 40]);
-                expect(game.getCards()[2]).toEqual([9, 10, 3, 4]);
-                expect(game.getCards()[3]).toEqual([13, 14, 7, 8]);
+                expect(game.getCards()[2]).toEqual([9, 10, discardedReverse[0], discardedReverse[1]]);
+                expect(game.getCards()[3]).toEqual([13, 14, discardedReverse[2], discardedReverse[3]]);
             });
 
             it('when the deck is already empty, it should deal cards without alternate', function() {
+                var discarded = [3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],
+                    discardedReverse = discarded.slice().reverse();
 
-                mockRandomNumberServiceShuffle([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                // We use slice for making a copy. It is necessary here to be able to use discardedReverse
+                // on the expectations below, and avoid it being mutated by the method.
+                mockRandomNumberServiceShuffle(discardedReverse.slice());
                 game.cards = [[1, 2], [5, 6], [9, 10], [13, 14]];
-                game.setDiscarded([3, 4, 7, 8, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                game.setDiscarded(discarded);
                 game.setDeck([]);
 
                 dealingService.dealCards(game, false);
 
                 expect(game.getDiscarded()).toBeEmptyArray();
-                expect(game.getDeck()).toEqual([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+                expect(game.getDeck()).toEqual(discardedReverse.slice(8, discarded.length));
 
-                expect(game.getCards()[0]).toEqual([1, 2, 3, 4]);
-                expect(game.getCards()[1]).toEqual([5, 6, 7, 8]);
-                expect(game.getCards()[2]).toEqual([9, 10, 11, 12]);
-                expect(game.getCards()[3]).toEqual([13, 14, 15, 16]);
+                expect(game.getCards()[0]).toEqual([1, 2, discardedReverse[0], discardedReverse[1]]);
+                expect(game.getCards()[1]).toEqual([5, 6, discardedReverse[2], discardedReverse[3]]);
+                expect(game.getCards()[2]).toEqual([9, 10, discardedReverse[4], discardedReverse[5]]);
+                expect(game.getCards()[3]).toEqual([13, 14, discardedReverse[6], discardedReverse[7]]);
             });
 
         });

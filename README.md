@@ -52,3 +52,8 @@ To run tests on the NodeJS server application:
 ```
 gulp test-server
 ```
+
+To run unit tests on the client application:
+```
+gulp test-client
+```

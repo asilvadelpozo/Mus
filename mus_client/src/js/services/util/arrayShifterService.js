@@ -6,6 +6,9 @@
             function shiftArrayNPositionsOnDirection(array, positions, direction) {
                 var result = array,
                     i;
+                if(array.length <= 1) {
+                    return array;
+                }
                 if(direction === 'right') {
                     for(i = 0; i < positions; i++) {
                         result.unshift(result.pop());

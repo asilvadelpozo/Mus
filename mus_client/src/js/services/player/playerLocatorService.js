@@ -6,8 +6,11 @@
             function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
                 if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
                     var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex;
+                    if(indexOfMainPlayer > -1) {
                         realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
-                    return game.players[realTargetPlayerIndex];
+                        return game.players[realTargetPlayerIndex];
+                    }
                 }
                 return null;
             }

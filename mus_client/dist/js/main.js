@@ -1066,8 +1066,11 @@
             function locatePlayer(game, mainPlayerName, targetPlayerIndex) {
                 if (typeof game !== 'undefined' && typeof game.players !== 'undefined') {
                     var indexOfMainPlayer = game.players.indexOf(mainPlayerName),
+                        realTargetPlayerIndex;
+                    if(indexOfMainPlayer > -1) {
                         realTargetPlayerIndex = (indexOfMainPlayer + targetPlayerIndex) % game.maxPlayers;
-                    return game.players[realTargetPlayerIndex];
+                        return game.players[realTargetPlayerIndex];
+                    }
                 }
                 return null;
             }
@@ -1087,6 +1090,9 @@
             function shiftArrayNPositionsOnDirection(array, positions, direction) {
                 var result = array,
                     i;
+                if(array.length <= 1) {
+                    return array;
+                }
                 if(direction === 'right') {
                     for(i = 0; i < positions; i++) {
                         result.unshift(result.pop());

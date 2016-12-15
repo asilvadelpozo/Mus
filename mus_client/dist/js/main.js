@@ -134,7 +134,6 @@
                     ];
 
                 $scope.game.hand = hand;
-                console.log('newCards in controller', cards);
                 $scope.game.currentStatus = 'hand-started';
                 $scope.game.players.forEach(function (player, index) {
                     if ($scope.playerName === player) {
@@ -142,7 +141,6 @@
                     }
                 });
                 $scope.game.cards = newCards;
-                console.log('newCards in controller 2', $scope.game.cards);
             });
 
             $scope.isRoomFull = function () {
@@ -670,22 +668,6 @@
         });
 })();
 
-(function () {
-    'use strict';
-    angular.module('musApp').config(['$routeProvider', function ($routeProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'src/views/main.html',
-                controller: 'mainCtrl'
-            })
-            .when('/room/:roomId', {
-                templateUrl: 'src/views/room.html',
-                controller: 'roomCtrl'
-            })
-            .otherwise({redirectTo: '/'});
-    }]);
-})();
-
 (function() {
     'use strict';
 
@@ -711,6 +693,22 @@
 
             return socket;
         });
+})();
+
+(function () {
+    'use strict';
+    angular.module('musApp').config(['$routeProvider', function ($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'src/views/main.html',
+                controller: 'mainCtrl'
+            })
+            .when('/room/:roomId', {
+                templateUrl: 'src/views/room.html',
+                controller: 'roomCtrl'
+            })
+            .otherwise({redirectTo: '/'});
+    }]);
 })();
 
 (function() {

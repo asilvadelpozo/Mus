@@ -74,7 +74,6 @@
                     ];
 
                 $scope.game.hand = hand;
-                console.log('newCards in controller', cards);
                 $scope.game.currentStatus = 'hand-started';
                 $scope.game.players.forEach(function (player, index) {
                     if ($scope.playerName === player) {
@@ -82,7 +81,6 @@
                     }
                 });
                 $scope.game.cards = newCards;
-                console.log('newCards in controller 2', $scope.game.cards);
             });
 
             $scope.isRoomFull = function () {
